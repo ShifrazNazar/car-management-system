@@ -8,7 +8,7 @@ import model.Car;
 import model.Customer;
 import model.Salesman;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2025-04-30T12:13:17")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2025-05-01T02:57:29")
 @StaticMetamodel(Sale.class)
 public class Sale_ { 
 
