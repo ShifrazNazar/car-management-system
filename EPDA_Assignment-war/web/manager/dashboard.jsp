@@ -343,6 +343,42 @@
       .rating i {
         color: #f9c74f;
       }
+
+      .action-buttons {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+
+      .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.875rem;
+      }
+
+      .update-form {
+        margin-top: 10px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+      }
+
+      .update-form .form-group {
+        margin-bottom: 10px;
+      }
+
+      .update-form .form-group input,
+      .update-form .form-group select {
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+      }
+
+      .update-form .btn {
+        margin-right: 5px;
+      }
     </style>
   </head>
   <body>
@@ -462,23 +498,39 @@
                 <td>${staff.username}</td>
                 <td>${staff.email}</td>
                 <td>
-                  <form action="ManagingStaffServlet" method="POST" style="display: inline;">
-                    <input type="hidden" name="action" value="updateStaff">
-                    <input type="hidden" name="id" value="${staff.id}">
-                    <input type="text" name="username" value="${staff.username}" required>
-                    <input type="password" name="password" placeholder="New password">
-                    <input type="email" name="email" value="${staff.email}" required>
-                    <button type="submit" class="btn btn-primary">
+                  <div class="action-buttons">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="showUpdateForm('staff-${staff.id}')">
                       <i class="fas fa-edit"></i> Update
                     </button>
-                  </form>
-                  <form action="ManagingStaffServlet" method="POST" style="display: inline;">
-                    <input type="hidden" name="action" value="deleteStaff">
-                    <input type="hidden" name="id" value="${staff.id}">
-                    <button type="submit" class="btn btn-danger">
-                      <i class="fas fa-trash"></i> Delete
-                    </button>
-                  </form>
+                    <form action="ManagingStaffServlet" method="POST" style="display: inline;">
+                      <input type="hidden" name="action" value="deleteStaff">
+                      <input type="hidden" name="id" value="${staff.id}">
+                      <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Delete
+                      </button>
+                    </form>
+                  </div>
+                  <div id="staff-${staff.id}" class="update-form" style="display: none;">
+                    <form action="ManagingStaffServlet" method="POST">
+                      <input type="hidden" name="action" value="updateStaff">
+                      <input type="hidden" name="id" value="${staff.id}">
+                      <div class="form-group">
+                        <input type="text" name="username" value="${staff.username}" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="password" name="password" placeholder="New password">
+                      </div>
+                      <div class="form-group">
+                        <input type="email" name="email" value="${staff.email}" required>
+                      </div>
+                      <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-save"></i> Save
+                      </button>
+                      <button type="button" class="btn btn-secondary btn-sm" onclick="hideUpdateForm('staff-${staff.id}')">
+                        <i class="fas fa-times"></i> Cancel
+                      </button>
+                    </form>
+                  </div>
                 </td>
               </tr>
               </c:forEach>
@@ -520,30 +572,46 @@
                   </span>
                 </td>
                 <td>
-                  <form action="ManagingStaffServlet" method="POST" style="display: inline;">
-                    <input type="hidden" name="action" value="approveSalesman">
-                    <input type="hidden" name="id" value="${salesman.salesmanId}">
-                    <button type="submit" class="btn btn-success">
-                      <i class="fas fa-check"></i> Approve
-                    </button>
-                  </form>
-                  <form action="ManagingStaffServlet" method="POST" style="display: inline;">
-                    <input type="hidden" name="action" value="updateSalesman">
-                    <input type="hidden" name="id" value="${salesman.salesmanId}">
-                    <input type="text" name="username" value="${salesman.username}" required>
-                    <input type="password" name="password" placeholder="New password">
-                    <input type="email" name="email" value="${salesman.email}" required>
-                    <button type="submit" class="btn btn-primary">
+                  <div class="action-buttons">
+                    <form action="ManagingStaffServlet" method="POST" style="display: inline;">
+                      <input type="hidden" name="action" value="approveSalesman">
+                      <input type="hidden" name="id" value="${salesman.salesmanId}">
+                      <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-check"></i> Approve
+                      </button>
+                    </form>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="showUpdateForm('salesman-${salesman.salesmanId}')">
                       <i class="fas fa-edit"></i> Update
                     </button>
-                  </form>
-                  <form action="ManagingStaffServlet" method="POST" style="display: inline;">
-                    <input type="hidden" name="action" value="deleteSalesman">
-                    <input type="hidden" name="id" value="${salesman.salesmanId}">
-                    <button type="submit" class="btn btn-danger">
-                      <i class="fas fa-trash"></i> Delete
-                    </button>
-                  </form>
+                    <form action="ManagingStaffServlet" method="POST" style="display: inline;">
+                      <input type="hidden" name="action" value="deleteSalesman">
+                      <input type="hidden" name="id" value="${salesman.salesmanId}">
+                      <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Delete
+                      </button>
+                    </form>
+                  </div>
+                  <div id="salesman-${salesman.salesmanId}" class="update-form" style="display: none;">
+                    <form action="ManagingStaffServlet" method="POST">
+                      <input type="hidden" name="action" value="updateSalesman">
+                      <input type="hidden" name="id" value="${salesman.salesmanId}">
+                      <div class="form-group">
+                        <input type="text" name="username" value="${salesman.username}" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="password" name="password" placeholder="New password">
+                      </div>
+                      <div class="form-group">
+                        <input type="email" name="email" value="${salesman.email}" required>
+                      </div>
+                      <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-save"></i> Save
+                      </button>
+                      <button type="button" class="btn btn-secondary btn-sm" onclick="hideUpdateForm('salesman-${salesman.salesmanId}')">
+                        <i class="fas fa-times"></i> Cancel
+                      </button>
+                    </form>
+                  </div>
                 </td>
               </tr>
               </c:forEach>
@@ -579,23 +647,39 @@
                 <td>${customer.username}</td>
                 <td>${customer.email}</td>
                 <td>
-                  <form action="ManagingStaffServlet" method="POST" style="display: inline;">
-                    <input type="hidden" name="action" value="updateCustomer">
-                    <input type="hidden" name="id" value="${customer.customerId}">
-                    <input type="text" name="username" value="${customer.username}" required>
-                    <input type="password" name="password" placeholder="New password">
-                    <input type="email" name="email" value="${customer.email}" required>
-                    <button type="submit" class="btn btn-primary">
+                  <div class="action-buttons">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="showUpdateForm('customer-${customer.customerId}')">
                       <i class="fas fa-edit"></i> Update
                     </button>
-                  </form>
-                  <form action="ManagingStaffServlet" method="POST" style="display: inline;">
-                    <input type="hidden" name="action" value="deleteCustomer">
-                    <input type="hidden" name="id" value="${customer.customerId}">
-                    <button type="submit" class="btn btn-danger">
-                      <i class="fas fa-trash"></i> Delete
-                    </button>
-                  </form>
+                    <form action="ManagingStaffServlet" method="POST" style="display: inline;">
+                      <input type="hidden" name="action" value="deleteCustomer">
+                      <input type="hidden" name="id" value="${customer.customerId}">
+                      <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Delete
+                      </button>
+                    </form>
+                  </div>
+                  <div id="customer-${customer.customerId}" class="update-form" style="display: none;">
+                    <form action="ManagingStaffServlet" method="POST">
+                      <input type="hidden" name="action" value="updateCustomer">
+                      <input type="hidden" name="id" value="${customer.customerId}">
+                      <div class="form-group">
+                        <input type="text" name="username" value="${customer.username}" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="password" name="password" placeholder="New password">
+                      </div>
+                      <div class="form-group">
+                        <input type="email" name="email" value="${customer.email}" required>
+                      </div>
+                      <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-save"></i> Save
+                      </button>
+                      <button type="button" class="btn btn-secondary btn-sm" onclick="hideUpdateForm('customer-${customer.customerId}')">
+                        <i class="fas fa-times"></i> Cancel
+                      </button>
+                    </form>
+                  </div>
                 </td>
               </tr>
               </c:forEach>
@@ -669,29 +753,49 @@
                   </span>
                 </td>
                 <td>
-                  <form action="ManagingStaffServlet" method="POST" style="display: inline;">
-                    <input type="hidden" name="action" value="updateCar">
-                    <input type="hidden" name="id" value="${car.carId}">
-                    <input type="text" name="make" value="${car.make}" required>
-                    <input type="text" name="model" value="${car.model}" required>
-                    <input type="text" name="color" value="${car.color}" required>
-                    <input type="number" name="price" value="${car.price}" step="0.01" required>
-                    <select name="status" required>
-                      <option value="available" ${car.status eq 'available' ? 'selected' : ''}>Available</option>
-                      <option value="booked" ${car.status eq 'booked' ? 'selected' : ''}>Booked</option>
-                      <option value="sold" ${car.status eq 'sold' ? 'selected' : ''}>Sold</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary">
+                  <div class="action-buttons">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="showUpdateForm('car-${car.carId}')">
                       <i class="fas fa-edit"></i> Update
                     </button>
-                  </form>
-                  <form action="ManagingStaffServlet" method="POST" style="display: inline;">
-                    <input type="hidden" name="action" value="deleteCar">
-                    <input type="hidden" name="id" value="${car.carId}">
-                    <button type="submit" class="btn btn-danger">
-                      <i class="fas fa-trash"></i> Delete
-                    </button>
-                  </form>
+                    <form action="ManagingStaffServlet" method="POST" style="display: inline;">
+                      <input type="hidden" name="action" value="deleteCar">
+                      <input type="hidden" name="id" value="${car.carId}">
+                      <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Delete
+                      </button>
+                    </form>
+                  </div>
+                  <div id="car-${car.carId}" class="update-form" style="display: none;">
+                    <form action="ManagingStaffServlet" method="POST">
+                      <input type="hidden" name="action" value="updateCar">
+                      <input type="hidden" name="id" value="${car.carId}">
+                      <div class="form-group">
+                        <input type="text" name="make" value="${car.make}" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="text" name="model" value="${car.model}" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="text" name="color" value="${car.color}" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="number" name="price" value="${car.price}" step="0.01" required>
+                      </div>
+                      <div class="form-group">
+                        <select name="status" required>
+                          <option value="available" ${car.status eq 'available' ? 'selected' : ''}>Available</option>
+                          <option value="booked" ${car.status eq 'booked' ? 'selected' : ''}>Booked</option>
+                          <option value="sold" ${car.status eq 'sold' ? 'selected' : ''}>Sold</option>
+                        </select>
+                      </div>
+                      <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-save"></i> Save
+                      </button>
+                      <button type="button" class="btn btn-secondary btn-sm" onclick="hideUpdateForm('car-${car.carId}')">
+                        <i class="fas fa-times"></i> Cancel
+                      </button>
+                    </form>
+                  </div>
                 </td>
               </tr>
               </c:forEach>
@@ -782,5 +886,15 @@
         </div>
       </div>
     </div>
+
+    <script>
+      function showUpdateForm(id) {
+        document.getElementById(id).style.display = 'block';
+      }
+
+      function hideUpdateForm(id) {
+        document.getElementById(id).style.display = 'none';
+      }
+    </script>
   </body>
 </html>
