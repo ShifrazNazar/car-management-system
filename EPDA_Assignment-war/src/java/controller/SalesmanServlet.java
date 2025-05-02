@@ -62,7 +62,10 @@ public class SalesmanServlet extends HttpServlet {
             
             // Load all cars and sales for current salesman by default
             List<Car> carList = carFacade.findAll();
-            List<Sale> saleList = saleFacade.findBySalesmanId(currentSalesman.getSalesmanId());
+            List<Sale> saleList = saleFacade.findAll(); // Get all sales first
+            
+            // Filter sales for current salesman
+            saleList.removeIf(sale -> !sale.getSalesman().getSalesmanId().equals(currentSalesman.getSalesmanId()));
             
             // Set the lists as request attributes
             request.setAttribute("carList", carList);
@@ -203,7 +206,9 @@ public class SalesmanServlet extends HttpServlet {
     private void viewSales(HttpServletRequest request, HttpServletResponse response, Long salesmanId) 
             throws ServletException, IOException {
         try {
-            List<Sale> saleList = saleFacade.findBySalesmanId(salesmanId);
+            List<Sale> saleList = saleFacade.findAll();
+            // Filter sales for current salesman
+            saleList.removeIf(sale -> !sale.getSalesman().getSalesmanId().equals(salesmanId));
             request.setAttribute("saleList", saleList);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error viewing sales", e);
