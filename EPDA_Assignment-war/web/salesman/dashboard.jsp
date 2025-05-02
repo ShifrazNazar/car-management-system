@@ -1,6 +1,5 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%> 
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%> <%@taglib prefix="c"
+uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
 <html>
@@ -22,9 +21,11 @@
 
       <div class="main-content">
         <div class="header">
-          <h1>Welcome, Shifraz</h1>
+          <h1>Welcome, ${sessionScope.user.username}</h1>
           <div class="user-info">
-            <div class="user-avatar">S</div>
+            <div class="user-avatar">
+              ${sessionScope.user.username.charAt(0)}
+            </div>
           </div>
         </div>
 
@@ -45,7 +46,6 @@
         <!-- Dashboard Section -->
         <div id="dashboard">
           <h2>Welcome to your Dashboard</h2>
-          
         </div>
 
         <!-- Profile Section -->
