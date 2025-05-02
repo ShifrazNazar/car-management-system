@@ -1,7 +1,8 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%> <%@page
-import="model.Sale"%> <%@page import="java.util.List"%> <%@page
-import="model.SaleFacade"%> <%@page import="javax.ejb.EJB"%> <%@taglib
-prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%> 
+<%@page import="model.Sale"%> 
+<%@page import="java.util.List"%> 
+<%@page import="model.SaleFacade"%> <%@page import="javax.ejb.EJB"%> 
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!-- Payment Analysis -->
 <div class="table-container">

@@ -7,7 +7,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 import model.Car;
 import model.Customer;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2025-05-02T13:33:57")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2025-05-02T15:45:24")
 @StaticMetamodel(Feedback.class)
 public class Feedback_ { 
 

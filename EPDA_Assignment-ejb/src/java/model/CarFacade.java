@@ -26,10 +26,17 @@ public class CarFacade extends AbstractFacade<Car> {
         super(Car.class);
     }
 
+    public List<Car> findBySalesmanId(Long salesmanId) {
+        TypedQuery<Car> query = em.createQuery(
+                "SELECT c FROM Car c WHERE c.salesman.salesmanId = :salesmanId", Car.class);
+        query.setParameter("salesmanId", salesmanId);
+        return query.getResultList();
+    }
+
     // Custom: Search cars by status (e.g., available, booked)
     public List<Car> findByStatus(String status) {
         TypedQuery<Car> query = em.createQuery(
-            "SELECT c FROM Car c WHERE LOWER(c.status) = :status", Car.class);
+                "SELECT c FROM Car c WHERE LOWER(c.status) = :status", Car.class);
         query.setParameter("status", status.toLowerCase());
         return query.getResultList();
     }
@@ -37,7 +44,7 @@ public class CarFacade extends AbstractFacade<Car> {
     // Custom: Search cars by model keyword
     public List<Car> searchByModel(String keyword) {
         TypedQuery<Car> query = em.createQuery(
-            "SELECT c FROM Car c WHERE LOWER(c.model) LIKE :keyword", Car.class);
+                "SELECT c FROM Car c WHERE LOWER(c.model) LIKE :keyword", Car.class);
         query.setParameter("keyword", "%" + keyword.toLowerCase() + "%");
         return query.getResultList();
     }
@@ -50,7 +57,7 @@ public class CarFacade extends AbstractFacade<Car> {
     // Custom: Filter cars by price range
     public List<Car> findCarsByPriceRange(double minPrice, double maxPrice) {
         TypedQuery<Car> query = em.createQuery(
-            "SELECT c FROM Car c WHERE c.price BETWEEN :min AND :max", Car.class);
+                "SELECT c FROM Car c WHERE c.price BETWEEN :min AND :max", Car.class);
         query.setParameter("min", minPrice);
         query.setParameter("max", maxPrice);
         return query.getResultList();
