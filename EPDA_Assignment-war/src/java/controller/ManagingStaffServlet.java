@@ -310,13 +310,13 @@ public class ManagingStaffServlet extends HttpServlet {
     private void addCar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String make = request.getParameter("make");
         String model = request.getParameter("model");
-        String year = request.getParameter("year");
+        String color = request.getParameter("color");
         double price = Double.parseDouble(request.getParameter("price"));
         
         Car car = new Car();
         car.setMake(make);
         car.setModel(model);
-        car.setYear(year);
+        car.setColor(color);
         car.setPrice(price);
         car.setStatus("available");
         
@@ -330,7 +330,7 @@ public class ManagingStaffServlet extends HttpServlet {
         Long id = Long.parseLong(request.getParameter("id"));
         String make = request.getParameter("make");
         String model = request.getParameter("model");
-        String year = request.getParameter("year");
+        String color = request.getParameter("color");
         double price = Double.parseDouble(request.getParameter("price"));
         String status = request.getParameter("status");
         
@@ -338,7 +338,7 @@ public class ManagingStaffServlet extends HttpServlet {
         if (car != null) {
             car.setMake(make);
             car.setModel(model);
-            car.setYear(year);
+            car.setColor(color);
             car.setPrice(price);
             car.setStatus(status);
             carFacade.edit(car);
