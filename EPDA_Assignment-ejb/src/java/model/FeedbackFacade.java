@@ -26,27 +26,28 @@ public class FeedbackFacade extends AbstractFacade<Feedback> {
         super(Feedback.class);
     }
 
-    // Custom: Get feedback by customer
+    // Custom: Find all feedback for a specific customer
     public List<Feedback> findByCustomerId(Long customerId) {
         TypedQuery<Feedback> query = em.createQuery(
-            "SELECT f FROM Feedback f WHERE f.customer.id = :customerId", Feedback.class);
+            "SELECT f FROM Feedback f WHERE f.customer.customerId = :customerId", Feedback.class);
         query.setParameter("customerId", customerId);
         return query.getResultList();
     }
 
-    // Custom: Get feedback by car
+    // Custom: Find all feedback for a specific car
     public List<Feedback> findByCarId(Long carId) {
         TypedQuery<Feedback> query = em.createQuery(
-            "SELECT f FROM Feedback f WHERE f.car.id = :carId", Feedback.class);
+            "SELECT f FROM Feedback f WHERE f.car.carId = :carId", Feedback.class);
         query.setParameter("carId", carId);
         return query.getResultList();
     }
 
-    // Custom: Get feedback by rating (e.g., for reports)
-    public List<Feedback> findByRating(int rating) {
+    // Custom: Find feedback by rating range
+    public List<Feedback> findByRatingRange(double minRating, double maxRating) {
         TypedQuery<Feedback> query = em.createQuery(
-            "SELECT f FROM Feedback f WHERE f.rating = :rating", Feedback.class);
-        query.setParameter("rating", rating);
+            "SELECT f FROM Feedback f WHERE f.rating BETWEEN :minRating AND :maxRating", Feedback.class);
+        query.setParameter("minRating", minRating);
+        query.setParameter("maxRating", maxRating);
         return query.getResultList();
     }
 }

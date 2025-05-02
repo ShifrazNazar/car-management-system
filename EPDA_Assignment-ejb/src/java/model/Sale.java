@@ -40,6 +40,9 @@ public class Sale implements Serializable {
     @Column(length = 1000)
     private String comment;
 
+    @Column
+    private boolean reviewed; // Flag to track if review has been submitted
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date saleDate;
 
@@ -47,6 +50,7 @@ public class Sale implements Serializable {
     public Sale() {
         this.saleDate = new Date();
         this.status = "booked"; // default status when created
+        this.reviewed = false; // default to not reviewed
     }
 
     public Sale(Car car, Salesman salesman, Customer customer, double amountPaid, String comment) {
@@ -57,6 +61,7 @@ public class Sale implements Serializable {
         this.comment = comment;
         this.status = "paid";
         this.saleDate = new Date();
+        this.reviewed = false;
     }
 
     // Getters and Setters
@@ -115,6 +120,14 @@ public class Sale implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public boolean isReviewed() {
+        return reviewed;
+    }
+
+    public void setReviewed(boolean reviewed) {
+        this.reviewed = reviewed;
     }
 
     public Date getSaleDate() {

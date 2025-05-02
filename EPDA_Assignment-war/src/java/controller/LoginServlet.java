@@ -63,7 +63,7 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("user", staff);
                     session.setAttribute("userId", staff.getId());
                     session.setAttribute("role", "manager");
-                    response.sendRedirect("manager/dashboard.jsp");
+                    response.sendRedirect("ManagerServlet");
                 } else if (user instanceof Salesman) {
                     Salesman salesman = (Salesman) user;
                     session.setAttribute("user", salesman);
@@ -75,7 +75,7 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("user", customer);
                     session.setAttribute("userId", customer.getCustomerId());
                     session.setAttribute("role", "customer");
-                    response.sendRedirect("customer/dashboard.jsp");
+                    response.sendRedirect("CustomerServlet");
                 }
             } else {
                 // Authentication failed

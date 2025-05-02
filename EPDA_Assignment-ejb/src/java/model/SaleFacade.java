@@ -38,7 +38,7 @@ public class SaleFacade extends AbstractFacade<Sale> {
     // Custom: Get all sales by customer
     public List<Sale> findByCustomerId(Long customerId) {
         TypedQuery<Sale> query = em.createQuery(
-            "SELECT s FROM Sale s WHERE s.customer.id = :customerId", Sale.class);
+            "SELECT s FROM Sale s WHERE s.customer.customerId = :customerId", Sale.class);
         query.setParameter("customerId", customerId);
         return query.getResultList();
     }
@@ -57,6 +57,39 @@ public class SaleFacade extends AbstractFacade<Sale> {
             "SELECT s FROM Sale s WHERE s.saleDate BETWEEN :start AND :end", Sale.class);
         query.setParameter("start", startDate);
         query.setParameter("end", endDate);
+        return query.getResultList();
+    }
+
+    // Custom: Get reviewed sales for a customer
+    public List<Sale> findReviewedSalesByCustomer(Long customerId) {
+        TypedQuery<Sale> query = em.createQuery(
+            "SELECT s FROM Sale s WHERE s.customer.customerId = :customerId AND s.reviewed = true", Sale.class);
+        query.setParameter("customerId", customerId);
+        return query.getResultList();
+    }
+
+    // Custom: Get unreviewed sales for a customer
+    public List<Sale> findUnreviewedSalesByCustomer(Long customerId) {
+        TypedQuery<Sale> query = em.createQuery(
+            "SELECT s FROM Sale s WHERE s.customer.customerId = :customerId AND s.reviewed = false", Sale.class);
+        query.setParameter("customerId", customerId);
+        return query.getResultList();
+    }
+
+    // Custom: Search sales by car model for a customer
+    public List<Sale> searchByModel(String model, Long customerId) {
+        TypedQuery<Sale> query = em.createQuery(
+            "SELECT s FROM Sale s WHERE s.customer.customerId = :customerId AND LOWER(s.car.model) LIKE :model", Sale.class);
+        query.setParameter("customerId", customerId);
+        query.setParameter("model", "%" + model.toLowerCase() + "%");
+        return query.getResultList();
+    }
+
+    // Custom: Find all sales for a specific car
+    public List<Sale> findByCarId(Long carId) {
+        TypedQuery<Sale> query = em.createQuery(
+            "SELECT s FROM Sale s WHERE s.car.carId = :carId", Sale.class);
+        query.setParameter("carId", carId);
         return query.getResultList();
     }
 }
