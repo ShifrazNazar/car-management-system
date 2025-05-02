@@ -209,9 +209,12 @@ public class ManagingStaffServlet extends HttpServlet {
 
     private void searchStaff(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String searchTerm = request.getParameter("searchTerm");
-        List<ManagingStaff> staffList = managingStaffFacade.searchByName(searchTerm);
-        request.setAttribute("staffList", staffList);
-        reloadAllData(request);
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            List<ManagingStaff> staffList = managingStaffFacade.searchByName(searchTerm);
+            request.setAttribute("staffList", staffList);
+        } else {
+            request.setAttribute("staffList", managingStaffFacade.findAll());
+        }
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -268,7 +271,12 @@ public class ManagingStaffServlet extends HttpServlet {
 
     private void searchSalesman(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String searchTerm = request.getParameter("searchTerm");
-        request.setAttribute("salesmanList", salesmanFacade.searchByName(searchTerm));
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            List<Salesman> salesmanList = salesmanFacade.searchByName(searchTerm);
+            request.setAttribute("salesmanList", salesmanList);
+        } else {
+            request.setAttribute("salesmanList", salesmanFacade.findAll());
+        }
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -303,7 +311,12 @@ public class ManagingStaffServlet extends HttpServlet {
 
     private void searchCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String searchTerm = request.getParameter("searchTerm");
-        request.setAttribute("customerList", customerFacade.searchByName(searchTerm));
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            List<Customer> customerList = customerFacade.searchByName(searchTerm);
+            request.setAttribute("customerList", customerList);
+        } else {
+            request.setAttribute("customerList", customerFacade.findAll());
+        }
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -359,7 +372,12 @@ public class ManagingStaffServlet extends HttpServlet {
 
     private void searchCar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String searchTerm = request.getParameter("searchTerm");
-        request.setAttribute("carList", carFacade.searchByModel(searchTerm));
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            List<Car> carList = carFacade.searchByModel(searchTerm);
+            request.setAttribute("carList", carList);
+        } else {
+            request.setAttribute("carList", carFacade.findAll());
+        }
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 

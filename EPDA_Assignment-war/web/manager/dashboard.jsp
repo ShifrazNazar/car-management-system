@@ -439,8 +439,8 @@
           <h2><i class="fas fa-users-cog"></i> Staff List</h2>
           <form action="ManagingStaffServlet" method="GET" style="margin-bottom: 20px;">
             <input type="hidden" name="action" value="searchStaff">
-            <div class="form-group">
-              <input type="text" name="searchTerm" placeholder="Search staff...">
+            <div class="form-group" style="display: flex; gap: 10px;">
+              <input type="text" name="searchTerm" placeholder="Search staff by name..." style="flex: 1;">
               <button type="submit" class="btn btn-primary">
                 <i class="fas fa-search"></i> Search
               </button>
@@ -491,8 +491,8 @@
           <h2><i class="fas fa-user-tie"></i> Salesmen List</h2>
           <form action="ManagingStaffServlet" method="GET" style="margin-bottom: 20px;">
             <input type="hidden" name="action" value="searchSalesman">
-            <div class="form-group">
-              <input type="text" name="searchTerm" placeholder="Search salesmen...">
+            <div class="form-group" style="display: flex; gap: 10px;">
+              <input type="text" name="searchTerm" placeholder="Search salesmen by name..." style="flex: 1;">
               <button type="submit" class="btn btn-primary">
                 <i class="fas fa-search"></i> Search
               </button>
@@ -556,8 +556,8 @@
           <h2><i class="fas fa-users"></i> Customer List</h2>
           <form action="ManagingStaffServlet" method="GET" style="margin-bottom: 20px;">
             <input type="hidden" name="action" value="searchCustomer">
-            <div class="form-group">
-              <input type="text" name="searchTerm" placeholder="Search customers...">
+            <div class="form-group" style="display: flex; gap: 10px;">
+              <input type="text" name="searchTerm" placeholder="Search customers by name..." style="flex: 1;">
               <button type="submit" class="btn btn-primary">
                 <i class="fas fa-search"></i> Search
               </button>
@@ -635,8 +635,8 @@
           <h2><i class="fas fa-car"></i> Car List</h2>
           <form action="ManagingStaffServlet" method="GET" style="margin-bottom: 20px;">
             <input type="hidden" name="action" value="searchCar">
-            <div class="form-group">
-              <input type="text" name="searchTerm" placeholder="Search cars...">
+            <div class="form-group" style="display: flex; gap: 10px;">
+              <input type="text" name="searchTerm" placeholder="Search cars by model..." style="flex: 1;">
               <button type="submit" class="btn btn-primary">
                 <i class="fas fa-search"></i> Search
               </button>

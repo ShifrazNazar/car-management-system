@@ -52,11 +52,11 @@ public class SalesmanFacade extends AbstractFacade<Salesman> {
         }
     }
 
-    // Custom: Search salesmen by name (partial match)
-    public List<Salesman> searchByName(String name) {
+    // Custom: Search salesmen by username (partial match)
+    public List<Salesman> searchByName(String username) {
         TypedQuery<Salesman> query = em.createQuery(
-            "SELECT s FROM Salesman s WHERE LOWER(s.name) LIKE :name", Salesman.class);
-        query.setParameter("name", "%" + name.toLowerCase() + "%");
+            "SELECT s FROM Salesman s WHERE LOWER(s.username) LIKE :username", Salesman.class);
+        query.setParameter("username", "%" + username.toLowerCase() + "%");
         return query.getResultList();
     }
 }

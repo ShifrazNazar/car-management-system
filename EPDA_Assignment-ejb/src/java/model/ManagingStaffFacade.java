@@ -52,11 +52,11 @@ public class ManagingStaffFacade extends AbstractFacade<ManagingStaff> {
         }
     }
 
-    // Custom: Search by name (partial match)
-    public List<ManagingStaff> searchByName(String name) {
+    // Custom: Search by username (partial match)
+    public List<ManagingStaff> searchByName(String username) {
         TypedQuery<ManagingStaff> query = em.createQuery(
-            "SELECT m FROM ManagingStaff m WHERE LOWER(m.name) LIKE :name", ManagingStaff.class);
-        query.setParameter("name", "%" + name.toLowerCase() + "%");
+            "SELECT m FROM ManagingStaff m WHERE LOWER(m.username) LIKE :username", ManagingStaff.class);
+        query.setParameter("username", "%" + username.toLowerCase() + "%");
         return query.getResultList();
     }
 }
