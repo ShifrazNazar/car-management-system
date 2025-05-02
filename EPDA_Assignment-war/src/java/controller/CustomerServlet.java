@@ -162,34 +162,72 @@ public class CustomerServlet extends HttpServlet {
     private void submitFeedback(HttpServletRequest request, HttpServletResponse response, Customer customer) 
             throws ServletException, IOException {
         try {
-            Long saleId = Long.parseLong(request.getParameter("saleId"));
-            double rating = Double.parseDouble(request.getParameter("rating"));
-            String title = request.getParameter("reviewTitle");
-            String content = request.getParameter("reviewContent");
-            
-            Sale sale = saleFacade.find(saleId);
-            if (sale != null && sale.getCustomer().equals(customer)) {
-                Feedback feedback = new Feedback();
-                feedback.setCustomer(customer);
-                feedback.setCar(sale.getCar());
-                feedback.setRating(rating);
-                feedback.setComment(content);
-                
-                feedbackFacade.create(feedback);
-                
-                // Update sale reviewed status
-                sale.setReviewed(true);
-                saleFacade.edit(sale);
-                
-                request.setAttribute("message", "Review submitted successfully");
-            } else {
-                request.setAttribute("error", "Invalid sale or unauthorized access");
+            // Get and validate saleId
+            String saleIdStr = request.getParameter("saleId");
+            if (saleIdStr == null || saleIdStr.trim().isEmpty()) {
+                request.setAttribute("errorMessage", "Invalid sale ID");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
             }
+            
+            Long saleId = Long.parseLong(saleIdStr);
+            
+            // Get and validate rating
+            String ratingStr = request.getParameter("rating");
+            if (ratingStr == null || ratingStr.trim().isEmpty()) {
+                request.setAttribute("errorMessage", "Please select a rating");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
+            }
+            
+            int rating = Integer.parseInt(ratingStr);
+            if (rating < 1 || rating > 5) {
+                request.setAttribute("errorMessage", "Please select a valid rating (1-5 stars)");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
+            }
+            
+            // Get and validate content
+            String content = request.getParameter("reviewContent");
+            if (content == null || content.trim().isEmpty()) {
+                request.setAttribute("errorMessage", "Please provide a review");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
+            }
+            
+            // Get the sale
+            Sale sale = saleFacade.find(saleId);
+            if (sale == null || !sale.getCustomer().equals(customer)) {
+                request.setAttribute("errorMessage", "Invalid sale or unauthorized access");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
+            }
+            
+            // Create and save feedback
+            Feedback feedback = new Feedback();
+            feedback.setCustomer(customer);
+            feedback.setCar(sale.getCar());
+            feedback.setRating(rating);
+            feedback.setComment(content);
+            
+            feedbackFacade.create(feedback);
+            
+            // Update sale reviewed status
+            sale.setReviewed(true);
+            saleFacade.edit(sale);
+            
+            // Redirect to dashboard with success message
+            request.setAttribute("successMessage", "Thank you for your review!");
+            request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+            
+        } catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "Invalid input format. Please try again.");
+            request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error submitting feedback", e);
-            request.setAttribute("error", "An error occurred while submitting feedback: " + e.getMessage());
+            request.setAttribute("errorMessage", "An error occurred while submitting your review");
+            request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
         }
-        request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
     }
 
     private void deleteFeedback(HttpServletRequest request, HttpServletResponse response) 
@@ -213,13 +251,13 @@ public class CustomerServlet extends HttpServlet {
                 // Delete the feedback
                 feedbackFacade.remove(feedback);
                 
-                request.setAttribute("message", "Review deleted successfully");
+                request.setAttribute("successMessage", "Review deleted successfully");
             } else {
-                request.setAttribute("error", "Review not found");
+                request.setAttribute("errorMessage", "Review not found");
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error deleting feedback", e);
-            request.setAttribute("error", "An error occurred while deleting review: " + e.getMessage());
+            request.setAttribute("errorMessage", "An error occurred while deleting review: " + e.getMessage());
         }
         request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
     }
@@ -227,22 +265,40 @@ public class CustomerServlet extends HttpServlet {
     private void getSaleDetails(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
-            Long saleId = Long.parseLong(request.getParameter("saleId"));
+            String saleIdStr = request.getParameter("saleId");
+            if (saleIdStr == null || saleIdStr.trim().isEmpty()) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Sale ID is required");
+                return;
+            }
+
+            Long saleId = Long.parseLong(saleIdStr);
             Sale sale = saleFacade.find(saleId);
             
-            if (sale != null) {
-                response.setContentType("application/json");
-                response.getWriter().write(String.format(
-                    "{\"carModel\":\"%s\",\"saleDate\":\"%s\"}",
-                    sale.getCar().getModel(),
-                    sale.getSaleDate()
-                ));
-            } else {
+            if (sale == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Sale not found");
+                return;
             }
+
+            // Create JSON response
+            String jsonResponse = String.format(
+                "{\"carModel\":\"%s\",\"saleDate\":\"%s\",\"saleId\":%d}",
+                sale.getCar().getModel(),
+                sale.getSaleDate(),
+                sale.getSaleId()
+            );
+
+            // Set response headers
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            
+            // Write JSON response
+            response.getWriter().write(jsonResponse);
+            
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid sale ID format");
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error getting sale details", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving sale details");
         }
     }
 
@@ -253,7 +309,7 @@ public class CustomerServlet extends HttpServlet {
             request.setAttribute("saleList", saleList);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error viewing purchases", e);
-            request.setAttribute("error", "An error occurred while viewing purchases: " + e.getMessage());
+            request.setAttribute("errorMessage", "An error occurred while viewing purchases: " + e.getMessage());
         }
         request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
     }
