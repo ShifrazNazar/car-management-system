@@ -11,6 +11,7 @@ import model.ManagingStaff;
 import model.CustomerFacade;
 import model.SalesmanFacade;
 import model.ManagingStaffFacade;
+import util.PasswordHasher;
 
 import java.io.IOException;
 import javax.ejb.EJB;
@@ -45,6 +46,9 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
+        // Hash the password before storing
+        String hashedPassword = PasswordHasher.hashPassword(password);
+
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(30 * 60); // 30 minutes
         session.setAttribute("lastActivity", System.currentTimeMillis());
@@ -53,7 +57,7 @@ public class RegisterServlet extends HttpServlet {
             case "customer":
                 Customer customer = new Customer();
                 customer.setUsername(username);
-                customer.setPassword(password);
+                customer.setPassword(hashedPassword);
                 customer.setEmail(email);
                 customer.setRole("customer");
 
@@ -65,7 +69,11 @@ public class RegisterServlet extends HttpServlet {
                 break;
 
             case "salesman":
-                Salesman salesman = new Salesman(username, email, password, role);
+                Salesman salesman = new Salesman();
+                salesman.setUsername(username);
+                salesman.setPassword(hashedPassword);
+                salesman.setEmail(email);
+                salesman.setRole("salesman");
                 salesmanFacade.create(salesman);
 
                 session.setAttribute("user", salesman);
@@ -76,7 +84,7 @@ public class RegisterServlet extends HttpServlet {
             case "manager":
                 ManagingStaff manager = new ManagingStaff();
                 manager.setUsername(username);
-                manager.setPassword(password);
+                manager.setPassword(hashedPassword);
                 manager.setEmail(email);
                 manager.setRole("manager");
                 managingStaffFacade.create(manager);

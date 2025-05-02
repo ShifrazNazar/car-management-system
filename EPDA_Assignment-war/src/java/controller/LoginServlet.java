@@ -20,6 +20,7 @@ import model.ManagingStaff;
 import model.ManagingStaffFacade;
 import model.Salesman;
 import model.SalesmanFacade;
+import util.PasswordHasher;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -98,20 +99,20 @@ public class LoginServlet extends HttpServlet {
     private Object authenticate(String username, String password) {
         try {
             // Check if the user is a Managing Staff (Admin)
-            ManagingStaff managingStaff = managingStaffFacade.login(username, password);
-            if (managingStaff != null) {
+            ManagingStaff managingStaff = managingStaffFacade.findByUsername(username);
+            if (managingStaff != null && PasswordHasher.verifyPassword(password, managingStaff.getPassword())) {
                 return managingStaff;
             }
 
             // Check if the user is a Salesman
-            Salesman salesman = salesmanFacade.login(username, password);
-            if (salesman != null) {
+            Salesman salesman = salesmanFacade.findByUsername(username);
+            if (salesman != null && PasswordHasher.verifyPassword(password, salesman.getPassword())) {
                 return salesman;
             }
 
             // Check if the user is a Customer
-            Customer customer = customerFacade.login(username, password);
-            if (customer != null) {
+            Customer customer = customerFacade.findByUsername(username);
+            if (customer != null && PasswordHasher.verifyPassword(password, customer.getPassword())) {
                 return customer;
             }
 

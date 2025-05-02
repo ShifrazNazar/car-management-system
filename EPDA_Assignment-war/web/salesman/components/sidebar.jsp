@@ -39,7 +39,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       </a>
     </li>
     <li>
-      <a href="login.jsp">
+      <a href="LogoutServlet">
         <i class="fas fa-sign-out-alt"></i>
         <span>Logout</span>
       </a>

@@ -27,25 +27,12 @@ public class ManagingStaffFacade extends AbstractFacade<ManagingStaff> {
         super(ManagingStaff.class);
     }
 
-    // Custom: Find staff by username (for login)
+    // Custom: Find by username (for checking duplicates or fetching)
     public ManagingStaff findByUsername(String username) {
         try {
             TypedQuery<ManagingStaff> query = em.createQuery(
                 "SELECT m FROM ManagingStaff m WHERE m.username = :username", ManagingStaff.class);
             query.setParameter("username", username);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
-    // Custom: Authenticate staff login
-    public ManagingStaff login(String username, String password) {
-        try {
-            TypedQuery<ManagingStaff> query = em.createQuery(
-                "SELECT m FROM ManagingStaff m WHERE m.username = :username AND m.password = :password", ManagingStaff.class);
-            query.setParameter("username", username);
-            query.setParameter("password", password);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;

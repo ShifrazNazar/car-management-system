@@ -27,20 +27,7 @@ public class SalesmanFacade extends AbstractFacade<Salesman> {
         super(Salesman.class);
     }
 
-    // Custom: Authenticate login
-    public Salesman login(String username, String password) {
-        try {
-            TypedQuery<Salesman> query = em.createQuery(
-                "SELECT s FROM Salesman s WHERE s.username = :username AND s.password = :password", Salesman.class);
-            query.setParameter("username", username);
-            query.setParameter("password", password);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
-    // Custom: Find by username
+    // Custom: Find by username (for checking duplicates or fetching)
     public Salesman findByUsername(String username) {
         try {
             TypedQuery<Salesman> query = em.createQuery(
@@ -52,7 +39,7 @@ public class SalesmanFacade extends AbstractFacade<Salesman> {
         }
     }
 
-    // Custom: Search salesmen by username (partial match)
+    // Custom: Search by username (partial match)
     public List<Salesman> searchByName(String username) {
         TypedQuery<Salesman> query = em.createQuery(
             "SELECT s FROM Salesman s WHERE LOWER(s.username) LIKE :username", Salesman.class);

@@ -1,4 +1,5 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%> <%@taglib prefix="c"
+uri="http://java.sun.com/jsp/jstl/core"%>
 <link rel="stylesheet" href="../css/index.css" />
 <div class="sidebar">
   <div class="sidebar-header">
@@ -38,7 +39,7 @@
       >
     </li>
     <li>
-      <a href="login.jsp"
+      <a href="LogoutServlet"
         ><i class="fas fa-sign-out-alt"></i><span>Logout</span></a
       >
     </li>

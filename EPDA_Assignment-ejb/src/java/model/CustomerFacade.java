@@ -27,19 +27,6 @@ public class CustomerFacade extends AbstractFacade<Customer> {
         super(Customer.class);
     }
 
-    // Custom: Authenticate login
-    public Customer login(String username, String password) {
-        try {
-            TypedQuery<Customer> query = em.createQuery(
-                "SELECT c FROM Customer c WHERE c.username = :username AND c.password = :password", Customer.class);
-            query.setParameter("username", username);
-            query.setParameter("password", password);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
     // Custom: Find by username (for checking duplicates or fetching)
     public Customer findByUsername(String username) {
         try {
