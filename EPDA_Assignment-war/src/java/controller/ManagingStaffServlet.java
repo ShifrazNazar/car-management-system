@@ -46,11 +46,11 @@ public class ManagingStaffServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Check if user is logged in and has manager role
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null || !"manager".equals(session.getAttribute("role"))) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
+//        HttpSession session = request.getSession(false);
+//        if (session == null || session.getAttribute("user") == null || !"manager".equals(session.getAttribute("role"))) {
+//            response.sendRedirect("login.jsp");
+//            return;
+//        }
 
         String action = request.getParameter("action");
         
@@ -330,7 +330,6 @@ public class ManagingStaffServlet extends HttpServlet {
         Long id = Long.parseLong(request.getParameter("id"));
         String make = request.getParameter("make");
         String model = request.getParameter("model");
-        String color = request.getParameter("color");
         double price = Double.parseDouble(request.getParameter("price"));
         String status = request.getParameter("status");
         
@@ -338,7 +337,6 @@ public class ManagingStaffServlet extends HttpServlet {
         if (car != null) {
             car.setMake(make);
             car.setModel(model);
-            car.setColor(color);
             car.setPrice(price);
             car.setStatus(status);
             carFacade.edit(car);

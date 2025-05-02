@@ -381,6 +381,13 @@
           </div>
         </c:if>
 
+        <c:if test="${not empty error}">
+          <div class="message error">
+            <i class="fas fa-exclamation-circle"></i>
+            ${error}
+          </div>
+        </c:if>
+
         <div class="stats-container">
           <div class="stat-card">
             <i class="fas fa-users-cog"></i>
@@ -610,8 +617,8 @@
               <input type="text" id="model" name="model" required>
             </div>
             <div class="form-group">
-              <label for="year">Year</label>
-              <input type="text" id="year" name="year" required>
+              <label for="color">Color</label>
+              <input type="text" id="color" name="color" required>
             </div>
             <div class="form-group">
               <label for="price">Price</label>
@@ -641,7 +648,7 @@
                 <th>ID</th>
                 <th>Make</th>
                 <th>Model</th>
-                <th>Year</th>
+                <th>Color</th>
                 <th>Price</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -653,7 +660,7 @@
                 <td>${car.carId}</td>
                 <td>${car.make}</td>
                 <td>${car.model}</td>
-                <td>${car.year}</td>
+                <td>${car.color}</td>
                 <td>$${car.price}</td>
                 <td>
                   <span class="status-badge ${car.status eq 'available' ? 'status-available' : 
@@ -667,7 +674,7 @@
                     <input type="hidden" name="id" value="${car.carId}">
                     <input type="text" name="make" value="${car.make}" required>
                     <input type="text" name="model" value="${car.model}" required>
-                    <input type="text" name="year" value="${car.year}" required>
+                    <input type="text" name="color" value="${car.color}" required>
                     <input type="number" name="price" value="${car.price}" step="0.01" required>
                     <select name="status" required>
                       <option value="available" ${car.status eq 'available' ? 'selected' : ''}>Available</option>
