@@ -20,10 +20,13 @@ import model.ManagingStaff;
 import model.ManagingStaffFacade;
 import model.Salesman;
 import model.SalesmanFacade;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(LoginServlet.class.getName());
 
     @EJB
     private CustomerFacade customerFacade;
@@ -36,54 +39,86 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get login details from request
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        try {
+            // Get login details from request
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
 
-        // Authenticate the user
-        Object user = authenticate(username, password);
-
-        if (user != null) {
-            // Store the user role in session
-            HttpSession session = request.getSession();
-            if (user instanceof ManagingStaff) {
-                session.setAttribute("role", "admin");
-                response.sendRedirect("admin.jsp"); // Redirect to admin dashboard
-            } else if (user instanceof Salesman) {
-                session.setAttribute("role", "salesman");
-                response.sendRedirect("salesman.jsp"); // Redirect to salesman dashboard
-            } else if (user instanceof Customer) {
-                session.setAttribute("role", "customer");
-                response.sendRedirect("customer.jsp"); // Redirect to customer dashboard
+            if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
+                request.setAttribute("errorMessage", "Username and password are required.");
+                forwardToLogin(request, response);
+                return;
             }
-        } else {
-            // Authentication failed, redirect back to login
-            request.setAttribute("errorMessage", "Invalid username or password.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-            dispatcher.forward(request, response);
+
+            // Authenticate the user
+            Object user = authenticate(username, password);
+
+            if (user != null) {
+                // Create new session
+                HttpSession session = request.getSession(true);
+                
+                // Store user object and role in session
+                if (user instanceof ManagingStaff) {
+                    ManagingStaff staff = (ManagingStaff) user;
+                    session.setAttribute("user", staff);
+                    session.setAttribute("userId", staff.getId());
+                    session.setAttribute("role", "manager");
+                    response.sendRedirect("manager/dashboard.jsp");
+                } else if (user instanceof Salesman) {
+                    Salesman salesman = (Salesman) user;
+                    session.setAttribute("user", salesman);
+                    session.setAttribute("userId", salesman.getSalesmanId());
+                    session.setAttribute("role", "salesman");
+                    response.sendRedirect("SalesmanServlet");
+                } else if (user instanceof Customer) {
+                    Customer customer = (Customer) user;
+                    session.setAttribute("user", customer);
+                    session.setAttribute("userId", customer.getCustomerId());
+                    session.setAttribute("role", "customer");
+                    response.sendRedirect("customer/dashboard.jsp");
+                }
+            } else {
+                // Authentication failed
+                request.setAttribute("errorMessage", "Invalid username or password.");
+                forwardToLogin(request, response);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error during login process", e);
+            request.setAttribute("errorMessage", "An error occurred during login. Please try again.");
+            forwardToLogin(request, response);
         }
     }
 
+    private void forwardToLogin(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+        dispatcher.forward(request, response);
+    }
+
     private Object authenticate(String username, String password) {
-        // Check if the user is a Managing Staff (Admin)
-        ManagingStaff managingStaff = managingStaffFacade.login(username, password);
-        if (managingStaff != null) {
-            return managingStaff;
-        }
+        try {
+            // Check if the user is a Managing Staff (Admin)
+            ManagingStaff managingStaff = managingStaffFacade.login(username, password);
+            if (managingStaff != null) {
+                return managingStaff;
+            }
 
-        // Check if the user is a Salesman
-        Salesman salesman = salesmanFacade.login(username, password);
-        if (salesman != null) {
-            return salesman;
-        }
+            // Check if the user is a Salesman
+            Salesman salesman = salesmanFacade.login(username, password);
+            if (salesman != null) {
+                return salesman;
+            }
 
-        // Check if the user is a Customer
-        Customer customer = customerFacade.login(username, password);
-        if (customer != null) {
-            return customer;
-        }
+            // Check if the user is a Customer
+            Customer customer = customerFacade.login(username, password);
+            if (customer != null) {
+                return customer;
+            }
 
-        // Return null if no user found
-        return null;
+            return null;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error during authentication", e);
+            return null;
+        }
     }
 }
