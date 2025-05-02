@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.Car"%>
 <%@page import="model.Sale"%>
+<%@page import="model.Car"%>
 <%@page import="model.Customer"%>
 <%@page import="model.Salesman"%>
 <%@page import="java.util.List"%>
@@ -9,21 +9,26 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Salesman Dashboard</title>
+        <title>My Sales</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet" href="css/styles.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/main.js"></script>
     </head>
     <body>
         <div class="dashboard-container">
             <jsp:include page="components/sidebar.jsp">
-                <jsp:param name="currentPage" value="dashboard"/>
+                <jsp:param name="currentPage" value="sales"/>
             </jsp:include>
 
             <div class="main-content">
                 <div class="header">
-                    <h1>Welcome, ${sessionScope.user.username}</h1>
+                    <h1>My Sales</h1>
                     <div class="user-info">
                         <div class="user-avatar">${sessionScope.user.username.charAt(0)}</div>
+                        <span>${sessionScope.user.username}</span>
                     </div>
                 </div>
 
@@ -41,79 +46,53 @@
                     </div>
                 </c:if>
 
-                <!-- Search Form -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <form action="SalesmanServlet" method="GET" class="search-form">
-                            <input type="hidden" name="action" value="search">
-                            <div class="input-group">
-                                <input type="text" name="searchTerm" class="form-control" 
-                                       placeholder="Search cars by make, model, or VIN...">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-search"></i> Search
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Available Cars -->
+                <!-- Sales Summary -->
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h2><i class="fas fa-car"></i> Available Cars</h2>
+                        <h2><i class="fas fa-chart-pie"></i> Sales Summary</h2>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Make</th>
-                                        <th>Model</th>
-                                        <th>Color</th>
-                                        <th>Price</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach items="${cars}" var="car">
-                                        <tr>
-                                            <td>${car.id}</td>
-                                            <td>${car.make}</td>
-                                            <td>${car.model}</td>
-                                            <td>${car.color}</td>
-                                            <td>$${car.price}</td>
-                                            <td>
-                                                <span class="status-badge ${car.status eq 'AVAILABLE' ? 'status-available' : 
-                                                                      car.status eq 'PENDING' ? 'status-booked' : 'status-sold'}">
-                                                    ${car.status}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <c:if test="${car.status == 'AVAILABLE'}">
-                                                    <form action="SalesmanServlet" method="POST" class="d-inline">
-                                                        <input type="hidden" name="action" value="updateStatus">
-                                                        <input type="hidden" name="carId" value="${car.id}">
-                                                        <input type="hidden" name="newStatus" value="PENDING">
-                                                        <button type="submit" class="btn btn-sm btn-warning">
-                                                            <i class="fas fa-bookmark"></i> Mark as Pending
-                                                        </button>
-                                                    </form>
-                                                </c:if>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Sales</h5>
+                                        <p class="card-text h3">${totalSales}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Completed Sales</h5>
+                                        <p class="card-text h3">${completedSales}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Pending Sales</h5>
+                                        <p class="card-text h3">${pendingSales}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Revenue</h5>
+                                        <p class="card-text h3">$${totalRevenue}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Recent Sales -->
+                <!-- Sales List -->
                 <div class="card">
                     <div class="card-header">
-                        <h2><i class="fas fa-chart-line"></i> Recent Sales</h2>
+                        <h2><i class="fas fa-list"></i> Sales Records</h2>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -126,6 +105,7 @@
                                         <th>Car</th>
                                         <th>Amount</th>
                                         <th>Status</th>
+                                        <th>Comments</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -143,6 +123,7 @@
                                                     ${sale.status}
                                                 </span>
                                             </td>
+                                            <td>${sale.comment}</td>
                                             <td>
                                                 <c:if test="${sale.status == 'PENDING'}">
                                                     <form class="payment-form" action="SalesmanServlet" method="POST">
@@ -169,4 +150,4 @@
         </div>
         <script src="js/main.js"></script>
     </body>
-</html>
+</html> 

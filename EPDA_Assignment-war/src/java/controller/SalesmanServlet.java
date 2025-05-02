@@ -17,9 +17,13 @@ import model.CustomerFacade;
 import model.Sale;
 import model.SaleFacade;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "SalesmanServlet", urlPatterns = {"/SalesmanServlet"})
 public class SalesmanServlet extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(SalesmanServlet.class.getName());
 
     @EJB
     private SalesmanFacade salesmanFacade;
@@ -35,57 +39,63 @@ public class SalesmanServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Check if user is logged in and has salesman role
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null || !"salesman".equals(session.getAttribute("role"))) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
+        try {
+            // Check if user is logged in and has salesman role
+            HttpSession session = request.getSession(false);
+            if (session == null || session.getAttribute("user") == null || !"salesman".equals(session.getAttribute("role"))) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
 
-        // Get current salesman from session
-        Salesman currentSalesman = (Salesman) session.getAttribute("user");
-        if (currentSalesman == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
+            // Get current salesman from session
+            Salesman currentSalesman = (Salesman) session.getAttribute("user");
+            if (currentSalesman == null) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
 
-        String action = request.getParameter("action");
-        
-        // Set facade attributes for JSP access
-        request.setAttribute("carFacade", carFacade);
-        request.setAttribute("saleFacade", saleFacade);
-        
-        // Load all cars and sales for current salesman by default
-        List<Car> carList = carFacade.findAll();
-        List<Sale> saleList = saleFacade.findBySalesmanId(currentSalesman.getSalesmanId());
-        
-        // Set the lists as request attributes
-        request.setAttribute("carList", carList);
-        request.setAttribute("saleList", saleList);
-        
-        if (action == null) {
-            request.getRequestDispatcher("salesman/dashboard.jsp").forward(request, response);
-            return;
-        }
+            String action = request.getParameter("action");
+            
+            // Set facade attributes for JSP access
+            request.setAttribute("carFacade", carFacade);
+            request.setAttribute("saleFacade", saleFacade);
+            
+            // Load all cars and sales for current salesman by default
+            List<Car> carList = carFacade.findAll();
+            List<Sale> saleList = saleFacade.findBySalesmanId(currentSalesman.getSalesmanId());
+            
+            // Set the lists as request attributes
+            request.setAttribute("carList", carList);
+            request.setAttribute("saleList", saleList);
+            
+            if (action == null) {
+                request.getRequestDispatcher("/salesman/dashboard.jsp").forward(request, response);
+                return;
+            }
 
-        switch (action) {
-            case "updateProfile":
-                updateProfile(request, response, currentSalesman);
-                break;
-            case "updateCarStatus":
-                updateCarStatus(request, response);
-                break;
-            case "processPayment":
-                processPayment(request, response);
-                break;
-            case "searchCars":
-                searchCars(request, response);
-                break;
-            case "viewSales":
-                viewSales(request, response, currentSalesman.getSalesmanId());
-                break;
-            default:
-                request.getRequestDispatcher("salesman/dashboard.jsp").forward(request, response);
+            switch (action) {
+                case "updateProfile":
+                    updateProfile(request, response, currentSalesman);
+                    break;
+                case "updateCarStatus":
+                    updateCarStatus(request, response);
+                    break;
+                case "processPayment":
+                    processPayment(request, response);
+                    break;
+                case "searchCars":
+                    searchCars(request, response);
+                    break;
+                case "viewSales":
+                    viewSales(request, response, currentSalesman.getSalesmanId());
+                    break;
+                default:
+                    request.getRequestDispatcher("/salesman/dashboard.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error in SalesmanServlet", e);
+            request.setAttribute("error", "An error occurred: " + e.getMessage());
+            request.getRequestDispatcher("/salesman/dashboard.jsp").forward(request, response);
         }
     }
 
@@ -116,9 +126,10 @@ public class SalesmanServlet extends HttpServlet {
             
             request.setAttribute("message", "Profile updated successfully");
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error updating profile", e);
             request.setAttribute("error", "An error occurred while updating profile: " + e.getMessage());
         }
-        request.getRequestDispatcher("salesman/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/salesman/dashboard.jsp").forward(request, response);
     }
 
     private void updateCarStatus(HttpServletRequest request, HttpServletResponse response) 
@@ -136,9 +147,10 @@ public class SalesmanServlet extends HttpServlet {
                 request.setAttribute("error", "Car not found");
             }
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error updating car status", e);
             request.setAttribute("error", "An error occurred while updating car status: " + e.getMessage());
         }
-        request.getRequestDispatcher("salesman/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/salesman/dashboard.jsp").forward(request, response);
     }
 
     private void processPayment(HttpServletRequest request, HttpServletResponse response) 
@@ -165,28 +177,39 @@ public class SalesmanServlet extends HttpServlet {
                 request.setAttribute("error", "Sale not found");
             }
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error processing payment", e);
             request.setAttribute("error", "An error occurred while processing payment: " + e.getMessage());
         }
-        request.getRequestDispatcher("salesman/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/salesman/dashboard.jsp").forward(request, response);
     }
 
     private void searchCars(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        String searchTerm = request.getParameter("searchTerm");
-        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            List<Car> carList = carFacade.searchByModel(searchTerm);
-            request.setAttribute("carList", carList);
-        } else {
-            request.setAttribute("carList", carFacade.findAll());
+        try {
+            String searchTerm = request.getParameter("searchTerm");
+            if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                List<Car> carList = carFacade.searchByModel(searchTerm);
+                request.setAttribute("carList", carList);
+            } else {
+                request.setAttribute("carList", carFacade.findAll());
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error searching cars", e);
+            request.setAttribute("error", "An error occurred while searching cars: " + e.getMessage());
         }
-        request.getRequestDispatcher("salesman/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/salesman/dashboard.jsp").forward(request, response);
     }
 
     private void viewSales(HttpServletRequest request, HttpServletResponse response, Long salesmanId) 
             throws ServletException, IOException {
-        List<Sale> saleList = saleFacade.findBySalesmanId(salesmanId);
-        request.setAttribute("saleList", saleList);
-        request.getRequestDispatcher("salesman/dashboard.jsp").forward(request, response);
+        try {
+            List<Sale> saleList = saleFacade.findBySalesmanId(salesmanId);
+            request.setAttribute("saleList", saleList);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error viewing sales", e);
+            request.setAttribute("error", "An error occurred while viewing sales: " + e.getMessage());
+        }
+        request.getRequestDispatcher("/salesman/dashboard.jsp").forward(request, response);
     }
 
     @Override
