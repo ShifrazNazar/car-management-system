@@ -45,98 +45,110 @@ public class ManagingStaffServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Check if user is logged in and has manager role
-//        HttpSession session = request.getSession(false);
-//        if (session == null || session.getAttribute("user") == null || !"manager".equals(session.getAttribute("role"))) {
-//            response.sendRedirect("login.jsp");
-//            return;
-//        }
+        try {
+            // Check if user is logged in and has manager role
+            HttpSession session = request.getSession(false);
+            if (session == null || session.getAttribute("user") == null || !"manager".equals(session.getAttribute("role"))) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
 
-        String action = request.getParameter("action");
-        
-        // Set facade attributes for JSP access
-        request.setAttribute("managingStaffFacade", managingStaffFacade);
-        request.setAttribute("salesmanFacade", salesmanFacade);
-        request.setAttribute("customerFacade", customerFacade);
-        request.setAttribute("carFacade", carFacade);
-        request.setAttribute("saleFacade", saleFacade);
-        request.setAttribute("feedbackFacade", feedbackFacade);
-        
-        // Load all lists by default
-        List<ManagingStaff> staffList = managingStaffFacade.findAll();
-        List<Salesman> salesmanList = salesmanFacade.findAll();
-        List<Customer> customerList = customerFacade.findAll();
-        List<Car> carList = carFacade.findAll();
-        List<Sale> saleList = saleFacade.findAll();
-        List<Feedback> feedbackList = feedbackFacade.findAll();
-        
-        // Set the lists as request attributes
-        request.setAttribute("staffList", staffList);
-        request.setAttribute("salesmanList", salesmanList);
-        request.setAttribute("customerList", customerList);
-        request.setAttribute("carList", carList);
-        request.setAttribute("saleList", saleList);
-        request.setAttribute("feedbackList", feedbackList);
-        
-        if (action == null) {
-            request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
-            return;
-        }
+            // Get current manager from session
+            ManagingStaff currentManager = (ManagingStaff) session.getAttribute("user");
+            if (currentManager == null) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
 
-        switch (action) {
-            case "addStaff":
-                addStaff(request, response);
-                break;
-            case "updateStaff":
-                updateStaff(request, response);
-                break;
-            case "deleteStaff":
-                deleteStaff(request, response);
-                break;
-            case "searchStaff":
-                searchStaff(request, response);
-                break;
-            case "approveSalesman":
-                approveSalesman(request, response);
-                break;
-            case "updateSalesman":
-                updateSalesman(request, response);
-                break;
-            case "deleteSalesman":
-                deleteSalesman(request, response);
-                break;
-            case "searchSalesman":
-                searchSalesman(request, response);
-                break;
-            case "updateCustomer":
-                updateCustomer(request, response);
-                break;
-            case "deleteCustomer":
-                deleteCustomer(request, response);
-                break;
-            case "searchCustomer":
-                searchCustomer(request, response);
-                break;
-            case "addCar":
-                addCar(request, response);
-                break;
-            case "updateCar":
-                updateCar(request, response);
-                break;
-            case "deleteCar":
-                deleteCar(request, response);
-                break;
-            case "searchCar":
-                searchCar(request, response);
-                break;
-            case "viewPayments":
-                viewPayments(request, response);
-                break;
-            case "viewFeedback":
-                viewFeedback(request, response);
-                break;
-            default:
+            String action = request.getParameter("action");
+            
+            // Set facade attributes for JSP access
+            request.setAttribute("managingStaffFacade", managingStaffFacade);
+            request.setAttribute("salesmanFacade", salesmanFacade);
+            request.setAttribute("customerFacade", customerFacade);
+            request.setAttribute("carFacade", carFacade);
+            request.setAttribute("saleFacade", saleFacade);
+            request.setAttribute("feedbackFacade", feedbackFacade);
+            
+            // Load all lists by default
+            List<ManagingStaff> staffList = managingStaffFacade.findAll();
+            List<Salesman> salesmanList = salesmanFacade.findAll();
+            List<Customer> customerList = customerFacade.findAll();
+            List<Car> carList = carFacade.findAll();
+            List<Sale> saleList = saleFacade.findAll();
+            List<Feedback> feedbackList = feedbackFacade.findAll();
+            
+            // Set the lists as request attributes
+            request.setAttribute("staffList", staffList);
+            request.setAttribute("salesmanList", salesmanList);
+            request.setAttribute("customerList", customerList);
+            request.setAttribute("carList", carList);
+            request.setAttribute("saleList", saleList);
+            request.setAttribute("feedbackList", feedbackList);
+            
+            if (action == null) {
                 request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
+                return;
+            }
+
+            switch (action) {
+                case "addStaff":
+                    addStaff(request, response);
+                    break;
+                case "updateStaff":
+                    updateStaff(request, response);
+                    break;
+                case "deleteStaff":
+                    deleteStaff(request, response);
+                    break;
+                case "searchStaff":
+                    searchStaff(request, response);
+                    break;
+                case "approveSalesman":
+                    approveSalesman(request, response);
+                    break;
+                case "updateSalesman":
+                    updateSalesman(request, response);
+                    break;
+                case "deleteSalesman":
+                    deleteSalesman(request, response);
+                    break;
+                case "searchSalesman":
+                    searchSalesman(request, response);
+                    break;
+                case "updateCustomer":
+                    updateCustomer(request, response);
+                    break;
+                case "deleteCustomer":
+                    deleteCustomer(request, response);
+                    break;
+                case "searchCustomer":
+                    searchCustomer(request, response);
+                    break;
+                case "addCar":
+                    addCar(request, response);
+                    break;
+                case "updateCar":
+                    updateCar(request, response);
+                    break;
+                case "deleteCar":
+                    deleteCar(request, response);
+                    break;
+                case "searchCar":
+                    searchCar(request, response);
+                    break;
+                case "viewPayments":
+                    viewPayments(request, response);
+                    break;
+                case "viewFeedback":
+                    viewFeedback(request, response);
+                    break;
+                default:
+                    request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            request.setAttribute("error", "An error occurred: " + e.getMessage());
+            request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
         }
     }
 
