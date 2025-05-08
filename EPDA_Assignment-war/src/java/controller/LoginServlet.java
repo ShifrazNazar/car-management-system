@@ -64,7 +64,7 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("user", staff);
                     session.setAttribute("userId", staff.getId());
                     session.setAttribute("role", "manager");
-                    response.sendRedirect("ManagerServlet");
+                    response.sendRedirect("ManagingStaffServlet");
                 } else if (user instanceof Salesman) {
                     Salesman salesman = (Salesman) user;
                     session.setAttribute("user", salesman);

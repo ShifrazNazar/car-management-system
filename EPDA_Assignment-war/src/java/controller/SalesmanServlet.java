@@ -19,6 +19,7 @@ import model.SaleFacade;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import util.PasswordHasher;
 
 @WebServlet(name = "SalesmanServlet", urlPatterns = {"/SalesmanServlet"})
 public class SalesmanServlet extends HttpServlet {
@@ -113,7 +114,9 @@ public class SalesmanServlet extends HttpServlet {
                 salesman.setUsername(username);
             }
             if (password != null && !password.isEmpty()) {
-                salesman.setPassword(password);
+                // Hash the password before updating
+                String hashedPassword = PasswordHasher.hashPassword(password);
+                salesman.setPassword(hashedPassword);
             }
             if (email != null && !email.isEmpty()) {
                 salesman.setEmail(email);

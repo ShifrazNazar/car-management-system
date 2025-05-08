@@ -21,6 +21,7 @@ import model.FeedbackFacade;
 import model.Sale;
 import model.SaleFacade;
 import java.util.List;
+import util.PasswordHasher;
 
 @WebServlet(name = "ManagingStaffServlet", urlPatterns = {"/ManagingStaffServlet"})
 public class ManagingStaffServlet extends HttpServlet {
@@ -194,7 +195,9 @@ public class ManagingStaffServlet extends HttpServlet {
         if (staff != null) {
             staff.setUsername(username);
             if (password != null && !password.isEmpty()) {
-                staff.setPassword(password);
+                // Hash the password before updating
+                String hashedPassword = PasswordHasher.hashPassword(password);
+                staff.setPassword(hashedPassword);
             }
             staff.setEmail(email);
             managingStaffFacade.edit(staff);

@@ -65,7 +65,7 @@ public class RegisterServlet extends HttpServlet {
 
                 session.setAttribute("user", customer);
                 session.setAttribute("role", "customer");
-                response.sendRedirect("customer.jsp");
+                response.sendRedirect("CustomerServlet");
                 break;
 
             case "salesman":
@@ -78,7 +78,7 @@ public class RegisterServlet extends HttpServlet {
 
                 session.setAttribute("user", salesman);
                 session.setAttribute("role", "salesman");
-                response.sendRedirect("salesman.jsp");
+                response.sendRedirect("SalesmanServlet");
                 break;
 
             case "manager":
@@ -91,7 +91,7 @@ public class RegisterServlet extends HttpServlet {
 
                 session.setAttribute("user", manager);
                 session.setAttribute("role", "manager");
-                response.sendRedirect("manager.jsp");
+                response.sendRedirect("ManagingStaffServlet");
                 break;
 
             default:
