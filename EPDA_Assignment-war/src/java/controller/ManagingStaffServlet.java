@@ -173,7 +173,9 @@ public class ManagingStaffServlet extends HttpServlet {
                 return;
             }
             
-            ManagingStaff staff = new ManagingStaff(username, password, email, "manager");
+            // Hash the password before creating new staff
+            String hashedPassword = PasswordHasher.hashPassword(password);
+            ManagingStaff staff = new ManagingStaff(username, hashedPassword, email, "manager");
             managingStaffFacade.create(staff);
             
             // Reload all data after adding staff
@@ -249,9 +251,13 @@ public class ManagingStaffServlet extends HttpServlet {
         if (salesman != null) {
             salesman.setRole("approved");
             salesmanFacade.edit(salesman);
+            
+            // Reload all data after approving salesman
+            reloadAllData(request);
+            request.setAttribute("message", "Salesman approved successfully");
+        } else {
+            request.setAttribute("error", "Salesman not found");
         }
-        
-        request.setAttribute("message", "Salesman approved successfully");
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -264,7 +270,11 @@ public class ManagingStaffServlet extends HttpServlet {
         Salesman salesman = salesmanFacade.find(id);
         if (salesman != null) {
             salesman.setUsername(username);
-            salesman.setPassword(password);
+            if (password != null && !password.isEmpty()) {
+                // Hash the password before updating
+                String hashedPassword = PasswordHasher.hashPassword(password);
+                salesman.setPassword(hashedPassword);
+            }
             salesman.setEmail(email);
             salesmanFacade.edit(salesman);
         }
@@ -304,7 +314,11 @@ public class ManagingStaffServlet extends HttpServlet {
         Customer customer = customerFacade.find(id);
         if (customer != null) {
             customer.setUsername(username);
-            customer.setPassword(password);
+            if (password != null && !password.isEmpty()) {
+                // Hash the password before updating
+                String hashedPassword = PasswordHasher.hashPassword(password);
+                customer.setPassword(hashedPassword);
+            }
             customer.setEmail(email);
             customerFacade.edit(customer);
         }
