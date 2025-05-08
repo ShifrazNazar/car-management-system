@@ -53,13 +53,4 @@ public class CarFacade extends AbstractFacade<Car> {
     public List<Car> findAvailableCars() {
         return findByStatus("available");
     }
-
-    // Custom: Filter cars by price range
-    public List<Car> findCarsByPriceRange(double minPrice, double maxPrice) {
-        TypedQuery<Car> query = em.createQuery(
-                "SELECT c FROM Car c WHERE c.price BETWEEN :min AND :max", Car.class);
-        query.setParameter("min", minPrice);
-        query.setParameter("max", maxPrice);
-        return query.getResultList();
-    }
 }
