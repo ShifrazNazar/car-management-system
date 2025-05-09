@@ -1,8 +1,7 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%> 
-<%@page import="model.Sale"%> 
-<%@page import="java.util.List"%> 
-<%@page import="model.SaleFacade"%> <%@page import="javax.ejb.EJB"%> 
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%> <%@page
+import="model.Sale"%> <%@page import="java.util.List"%> <%@page
+import="model.SaleFacade"%> <%@page import="javax.ejb.EJB"%> <%@taglib
+prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!-- Payment Analysis -->
 <div class="table-container">
@@ -32,7 +31,7 @@
           <td>${sale.saleDate}</td>
           <td>
             <span
-              class="status-badge ${sale.status eq 'paid' ? 'status-available' : (sale.status eq 'booked' ? 'status-booked' : (sale.status eq 'cancel' ? 'status-cancel' : 'status-available'))}"
+              class="status-badge ${sale.status eq 'paid' ? 'status-paid' : (sale.status eq 'booked' ? 'status-booked' : (sale.status eq 'cancel' ? 'status-cancel' : (sale.status eq 'available' ? 'status-available' : 'status-sold')))}"
             >
               ${sale.status}
             </span>

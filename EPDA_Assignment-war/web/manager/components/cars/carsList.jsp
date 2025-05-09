@@ -39,57 +39,59 @@
                     <td>$${car.price}</td>
                     <td>
                         <span class="status-badge ${car.status eq 'available' ? 'status-available' : 
-                                                    (car.status eq 'booked' ? 'status-booked' : 'status-sold')}">
-                                  ${car.status}
-                              </span>
-                        </td>
-                        <td>
-                            <div class="action-buttons">
-                                <button type="button" class="btn btn-primary btn-sm" onclick="showUpdateForm('car-${car.carId}')">
-                                    <i class="fas fa-edit"></i> Update
+                                                    (car.status eq 'booked' ? 'status-booked' : 
+                                                    (car.status eq 'paid' ? 'status-paid' : 
+                                                    (car.status eq 'cancel' ? 'status-cancel' : 'status-sold')))}">
+                            ${car.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="showUpdateForm('car-${car.carId}')">
+                                <i class="fas fa-edit"></i> Update
+                            </button>
+                            <form action="ManagingStaffServlet" method="POST" style="display: inline;">
+                                <input type="hidden" name="action" value="deleteCar">
+                                <input type="hidden" name="id" value="${car.carId}">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> Delete
                                 </button>
-                                <form action="ManagingStaffServlet" method="POST" style="display: inline;">
-                                    <input type="hidden" name="action" value="deleteCar">
-                                    <input type="hidden" name="id" value="${car.carId}">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </form>
-                            </div>
-                            <div id="car-${car.carId}" class="update-form" style="display: none;">
-                                <form action="ManagingStaffServlet" method="POST">
-                                    <input type="hidden" name="action" value="updateCar">
-                                    <input type="hidden" name="id" value="${car.carId}">
-                                    <div class="form-group">
-                                        <input type="text" name="make" value="${car.make}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="model" value="${car.model}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="color" value="${car.color}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="number" name="price" value="${car.price}" step="0.01" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <select name="status" required>
-                                            <option value="available" ${car.status eq 'available' ? 'selected' : ''}>Available</option>
-                                            <option value="booked" ${car.status eq 'booked' ? 'selected' : ''}>Booked</option>
-                                            <option value="sold" ${car.status eq 'sold' ? 'selected' : ''}>Sold</option>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn btn-success btn-sm">
-                                        <i class="fas fa-save"></i> Save
-                                    </button>
-                                    <button type="button" class="btn btn-secondary btn-sm" onclick="hideUpdateForm('car-${car.carId}')">
-                                        <i class="fas fa-times"></i> Cancel
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
-    </div>
+                            </form>
+                        </div>
+                        <div id="car-${car.carId}" class="update-form" style="display: none;">
+                            <form action="ManagingStaffServlet" method="POST">
+                                <input type="hidden" name="action" value="updateCar">
+                                <input type="hidden" name="id" value="${car.carId}">
+                                <div class="form-group">
+                                    <input type="text" name="make" value="${car.make}" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="model" value="${car.model}" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="color" value="${car.color}" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="price" value="${car.price}" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <select name="status" required>
+                                        <option value="available" ${car.status eq 'available' ? 'selected' : ''}>Available</option>
+                                        <option value="booked" ${car.status eq 'booked' ? 'selected' : ''}>Booked</option>
+                                        <option value="sold" ${car.status eq 'sold' ? 'selected' : ''}>Sold</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="hideUpdateForm('car-${car.carId}')">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
+</div>

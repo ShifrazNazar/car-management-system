@@ -327,6 +327,12 @@ tr:hover {
   color: #004085;
 }
 
+.status-paid {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+
 .rating {
   display: flex;
   gap: 0.2rem;
