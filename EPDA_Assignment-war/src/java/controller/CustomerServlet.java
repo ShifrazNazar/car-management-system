@@ -259,7 +259,7 @@ public class CustomerServlet extends HttpServlet {
                 return;
             }
             
-            int rating = Integer.parseInt(ratingStr);
+            double rating = Double.parseDouble(ratingStr);
             if (rating < 1 || rating > 5) {
                 request.setAttribute("errorMessage", "Please select a valid rating (1-5 stars)");
                 request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
@@ -282,12 +282,26 @@ public class CustomerServlet extends HttpServlet {
                 return;
             }
             
+            // Check if sale is paid and not reviewed
+            if (!"paid".equals(sale.getStatus())) {
+                request.setAttribute("errorMessage", "Cannot submit feedback for unpaid purchases");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
+            }
+            
+            if (sale.isReviewed()) {
+                request.setAttribute("errorMessage", "You have already submitted feedback for this purchase");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
+            }
+            
             // Create and save feedback
             Feedback feedback = new Feedback();
             feedback.setCustomer(customer);
             feedback.setCar(sale.getCar());
             feedback.setRating(rating);
             feedback.setComment(content);
+            feedback.setSubmittedAt(new Date());
             
             feedbackFacade.create(feedback);
             
@@ -297,7 +311,7 @@ public class CustomerServlet extends HttpServlet {
             
             // Reload all data after submitting feedback
             reloadAllData(request, customer.getCustomerId());
-            request.setAttribute("successMessage", "Thank you for your review!");
+            request.setAttribute("message", "Thank you for your review!");
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Invalid input format. Please try again.");
         } catch (Exception e) {
