@@ -24,10 +24,11 @@
         </thead>
         <tbody>
             <c:forEach var="sale" items="${saleList}">
+                <c:if test="${!'paid'.equals(sale.status)}">
                     <tr>
                         <td>${sale.saleId}</td>
                         <td>${sale.car.make} ${sale.car.model}</td>
-                        <td>${sale.car.price}</td>
+                        <td>$${sale.car.price}</td>
                         <td>${sale.customer.username}</td>
                         <td>$${sale.amountPaid}</td>
                         <td>
@@ -51,6 +52,7 @@
                                     <div class="form-group">
                                         <label>Amount Paid</label>
                                         <input type="number" name="amountPaid" class="form-control" 
+                                               min="0" step="0.01" value="${sale.car.price}" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Comments</label>
@@ -68,6 +70,7 @@
                             </div>
                         </td>
                     </tr>
+                </c:if>
             </c:forEach>
         </tbody>
     </table>

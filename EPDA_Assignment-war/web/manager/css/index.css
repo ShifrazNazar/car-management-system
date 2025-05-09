@@ -317,9 +317,14 @@ tr:hover {
   color: #856404;
 }
 
-.status-sold {
+.status-cancel {
   background-color: #f8d7da;
   color: #721c24;
+}
+
+.status-sold {
+  background-color: #cce5ff;
+  color: #004085;
 }
 
 .rating {
