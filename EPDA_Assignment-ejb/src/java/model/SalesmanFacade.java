@@ -27,7 +27,7 @@ public class SalesmanFacade extends AbstractFacade<Salesman> {
         super(Salesman.class);
     }
 
-    // Custom: Find by username (for checking duplicates or fetching)
+    // Custom: Find by username
     public Salesman findByUsername(String username) {
         try {
             TypedQuery<Salesman> query = em.createQuery(
@@ -39,7 +39,7 @@ public class SalesmanFacade extends AbstractFacade<Salesman> {
         }
     }
 
-    // Custom: Search by username (partial match)
+    // Custom: Search salesmen by username (partial match)
     public List<Salesman> searchByName(String username) {
         TypedQuery<Salesman> query = em.createQuery(
             "SELECT s FROM Salesman s WHERE LOWER(s.username) LIKE :username", Salesman.class);

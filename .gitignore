@@ -1,0 +1,28 @@
+# Build directories
+EPDA_Assignment-ejb/build/
+EPDA_Assignment-ejb/dist/
+EPDA_Assignment-war/build/
+EPDA_Assignment-war/dist/
+EPDA_Assignment-war/target/
+EPDA_Assignment-ejb/target/
+
+# IDE specific files
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+
+# OS specific files
+.DS_Store
+Thumbs.db

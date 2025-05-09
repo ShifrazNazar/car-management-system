@@ -22,9 +22,9 @@
 
             <div class="main-content">
                 <div class="header">
-                    <h1>Welcome, Shifraz</h1>
+                    <h1>Welcome, ${sessionScope.user.username}</h1>
                     <div class="user-info">
-                        <div class="user-avatar">S</div>
+                        <div class="user-avatar">${sessionScope.user.username.charAt(0)}</div>
                     </div>
                 </div>
 

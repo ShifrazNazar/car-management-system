@@ -27,7 +27,7 @@ public class CustomerFacade extends AbstractFacade<Customer> {
         super(Customer.class);
     }
 
-    // Custom: Find by username (for checking duplicates or fetching)
+    // Custom: Find by username 
     public Customer findByUsername(String username) {
         try {
             TypedQuery<Customer> query = em.createQuery(

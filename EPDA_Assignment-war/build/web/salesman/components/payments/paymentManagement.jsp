@@ -8,15 +8,15 @@
 
 <div class="table-container">
     <h2>Payments & Comments</h2>
-    
+
     <!-- Pending Payments Table -->
     <table>
         <thead>
             <tr>
                 <th>Sale ID</th>
                 <th>Car Details</th>
+                <th>Car Price</th>
                 <th>Customer</th>
-                <th>Total Amount</th>
                 <th>Amount Paid</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -24,10 +24,10 @@
         </thead>
         <tbody>
             <c:forEach var="sale" items="${saleList}">
-                <c:if test="${sale.status != 'paid'}">
                     <tr>
                         <td>${sale.saleId}</td>
                         <td>${sale.car.make} ${sale.car.model}</td>
+                        <td>${sale.car.price}</td>
                         <td>${sale.customer.username}</td>
                         <td>$${sale.amountPaid}</td>
                         <td>
@@ -68,7 +68,6 @@
                             </div>
                         </td>
                     </tr>
-                </c:if>
             </c:forEach>
         </tbody>
     </table>

@@ -1,80 +1,135 @@
-<%-- Document : register Created on : 25-Apr-2025, 18:10:17 Author : Shifraz
---%> <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%> <%@taglib prefix="c"
+uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Car Sales System | Register</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     <style>
       * {
         box-sizing: border-box;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
       }
+
       body {
-        background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+        background: linear-gradient(135deg, #4361ee, #3f37c9);
         margin: 0;
         padding: 0;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
       }
+
       .register-container {
         background-color: #ffffff;
-        padding: 40px;
+        padding: 1.5rem;
         width: 100%;
-        max-width: 450px;
+        max-width: 400px;
         border-radius: 12px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       }
+
       .register-container h2 {
         text-align: center;
-        color: #333;
-        margin-bottom: 30px;
+        color: #4361ee;
+        margin-bottom: 1.2rem;
+        font-size: 1.5rem;
+        font-weight: 600;
       }
-      .register-container label {
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
         display: block;
-        margin-bottom: 8px;
-        color: #444;
+        margin-bottom: 0.3rem;
+        color: #2c3e50;
+        font-weight: 500;
+        font-size: 0.9rem;
       }
-      .register-container input[type="text"],
-      .register-container input[type="password"],
-      .register-container input[type="email"],
-      .register-container select {
+
+      .form-group input,
+      .form-group select {
         width: 100%;
-        padding: 12px;
-        margin-bottom: 20px;
-        border: 1px solid #ccc;
+        padding: 0.6rem;
+        border: 1px solid #ddd;
         border-radius: 8px;
-        font-size: 16px;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
       }
-      .register-container input[type="submit"] {
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #4361ee;
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+      }
+
+      .btn {
         width: 100%;
-        background-color: #007bff;
-        color: white;
-        padding: 12px;
+        padding: 0.6rem;
         border: none;
         border-radius: 8px;
-        font-size: 16px;
         cursor: pointer;
-        transition: 0.3s ease;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
       }
-      .register-container input[type="submit"]:hover {
-        background-color: #007bff;
+
+      .btn-primary {
+        background-color: #4361ee;
+        color: white;
       }
+
+      .btn-primary:hover {
+        background-color: #3f37c9;
+        transform: translateY(-2px);
+      }
+
       .login-link {
         text-align: center;
-        margin-top: 20px;
+        margin-top: 1rem;
+        font-size: 0.9rem;
       }
+
       .login-link a {
-        color: #007bff;
+        color: #4361ee;
         text-decoration: none;
-        font-weight: bold;
+        font-weight: 500;
+        transition: color 0.3s ease;
       }
+
+      .login-link a:hover {
+        color: #3f37c9;
+      }
+
       .error-message {
-        color: red;
-        text-align: center;
-        margin-bottom: 15px;
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 0.8rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border: 1px solid #f5c6cb;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      .error-message i {
+        font-size: 1rem;
       }
     </style>
   </head>
@@ -83,30 +138,41 @@
       <h2>Create an Account</h2>
 
       <form action="RegisterServlet" method="POST">
-        <% if (request.getAttribute("errorMessage") != null) { %>
-        <div class="error-message">
-          <%= request.getAttribute("errorMessage") %>
+        <c:if test="${not empty errorMessage}">
+          <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            ${errorMessage}
+          </div>
+        </c:if>
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required />
         </div>
-        <% } %>
 
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required />
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required />
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required />
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select name="role" id="role" required>
+            <option value="">Select Role</option>
+            <option value="customer">Customer</option>
+            <option value="salesman">Salesman</option>
+            <option value="manager">Manager</option>
+          </select>
+        </div>
 
-        <label for="role">Role</label>
-        <select name="role" id="role" required>
-          <option value="">Select Role</option>
-          <option value="customer">Customer</option>
-          <option value="salesman">Salesman</option>
-          <option value="manager">Manager</option>
-        </select>
-
-        <input type="submit" value="Register" />
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-user-plus"></i> Register
+        </button>
       </form>
 
       <div class="login-link">

@@ -27,7 +27,7 @@ public class ManagingStaffFacade extends AbstractFacade<ManagingStaff> {
         super(ManagingStaff.class);
     }
 
-    // Custom: Find by username (for checking duplicates or fetching)
+    // Custom: Find staff by username 
     public ManagingStaff findByUsername(String username) {
         try {
             TypedQuery<ManagingStaff> query = em.createQuery(
