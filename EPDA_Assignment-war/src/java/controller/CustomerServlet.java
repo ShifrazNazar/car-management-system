@@ -18,6 +18,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.PasswordHasher;
+import model.Car;
+import model.CarFacade;
+import model.Salesman;
+import model.SalesmanFacade;
+import java.util.Date;
 
 @WebServlet(name = "CustomerServlet", urlPatterns = {"/CustomerServlet"})
 public class CustomerServlet extends HttpServlet {
@@ -32,6 +37,12 @@ public class CustomerServlet extends HttpServlet {
     
     @EJB
     private FeedbackFacade feedbackFacade;
+    
+    @EJB
+    private CarFacade carFacade;
+    
+    @EJB
+    private SalesmanFacade salesmanFacade;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -71,6 +82,10 @@ public class CustomerServlet extends HttpServlet {
             request.setAttribute("feedbackList", feedbackList);
             request.setAttribute("averageRating", averageRating);
             
+            // Load available cars for purchase form
+            List<Car> availableCars = carFacade.findByStatus("available");
+            request.setAttribute("availableCars", availableCars);
+            
             if (action == null) {
                 // Default action: show dashboard
                 request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
@@ -83,6 +98,9 @@ public class CustomerServlet extends HttpServlet {
                     break;
                 case "searchSales":
                     searchSales(request, response, currentCustomer);
+                    break;
+                case "submitPurchase":
+                    submitPurchase(request, response, currentCustomer);
                     break;
                 case "submitFeedback":
                     submitFeedback(request, response, currentCustomer);
@@ -160,6 +178,62 @@ public class CustomerServlet extends HttpServlet {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error searching sales", e);
             request.setAttribute("error", "An error occurred while searching sales: " + e.getMessage());
+        }
+        request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+    }
+
+    private void submitPurchase(HttpServletRequest request, HttpServletResponse response, Customer customer) 
+            throws ServletException, IOException {
+        try {
+            String carIdStr = request.getParameter("carId");
+            if (carIdStr == null || carIdStr.trim().isEmpty()) {
+                request.setAttribute("errorMessage", "Invalid car selection");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
+            }
+            
+            Long carId = Long.parseLong(carIdStr);
+            Car car = carFacade.find(carId);
+            
+            if (car == null || !"available".equals(car.getStatus())) {
+                request.setAttribute("errorMessage", "Selected car is not available");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
+            }
+            
+            // Get the first available salesman
+            List<Salesman> salesmen = salesmanFacade.findAll();
+            if (salesmen.isEmpty()) {
+                request.setAttribute("errorMessage", "No salesmen available to process your purchase");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
+            }
+            
+            // Create new sale with all required fields
+            Sale sale = new Sale();
+            sale.setCar(car);
+            sale.setCustomer(customer);
+            sale.setSalesman(salesmen.get(0)); // Assign first available salesman
+            sale.setStatus("booked");
+            sale.setReviewed(false);
+            sale.setSaleDate(new Date());
+            sale.setAmountPaid(0.0); // Initial amount paid is 0
+            sale.setComment("Purchase request submitted");
+            
+            // Update car status
+            car.setStatus("booked");
+            carFacade.edit(car);
+            
+            // Save the sale
+            saleFacade.create(sale);
+            
+            // Reload all data
+            reloadAllData(request, customer.getCustomerId());
+            request.setAttribute("message", "Car purchase request submitted successfully!");
+            
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error submitting purchase", e);
+            request.setAttribute("errorMessage", "An error occurred while submitting purchase: " + e.getMessage());
         }
         request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
     }
