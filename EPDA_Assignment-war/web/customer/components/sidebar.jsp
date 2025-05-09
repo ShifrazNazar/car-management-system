@@ -20,6 +20,12 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <span>My Profile</span>
       </a>
     </li>
+        <li>
+      <a href="#purchase">
+        <i class="fas fa-car"></i>
+        <span>Buy Car</span>
+      </a>
+    </li>
     <li>
       <a href="#purchaseHistory">
         <i class="fas fa-history"></i>

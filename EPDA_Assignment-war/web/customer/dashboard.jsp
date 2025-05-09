@@ -54,14 +54,14 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           </div>
         </div>
 
-        <!-- Purchase Section -->
-        <div id="purchase">
-          <jsp:include page="components/purchase/purchaseForm.jsp" />
-        </div>
-
         <!-- Profile Section -->
         <div id="profile">
           <jsp:include page="components/profile/profileManagement.jsp" />
+        </div>
+        
+         <!-- Purchase Section -->
+        <div id="purchase">
+          <jsp:include page="components/purchase/purchaseForm.jsp" />
         </div>
 
         <!-- Purchase History Section -->

@@ -46,13 +46,6 @@ uri="http://java.sun.com/jsp/jstl/core"%>
                   <i class="fas fa-comment"></i> Leave Review
                 </a>
               </c:if>
-              <a
-                href="#"
-                class="btn btn-info"
-                onclick="viewSaleDetails(${sale.saleId})"
-              >
-                <i class="fas fa-info-circle"></i> Details
-              </a>
             </div>
           </div>
         </c:forEach>

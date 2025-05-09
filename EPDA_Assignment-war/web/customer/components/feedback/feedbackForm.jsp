@@ -1,8 +1,11 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%> <%@page
-import="model.Feedback"%> <%@page import="model.FeedbackFacade"%> <%@page
-import="model.Sale"%> <%@page import="model.SaleFacade"%> <%@page
-import="model.Car"%> <%@page import="javax.ejb.EJB"%> <%@taglib prefix="c"
-uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%> 
+<%@page import="model.Feedback"%> 
+<%@page import="model.FeedbackFacade"%> 
+<%@page import="model.Sale"%> 
+<%@page import="model.SaleFacade"%> 
+<%@page import="model.Car"%> 
+<%@page import="javax.ejb.EJB"%> 
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="feedback-container">
   <h2>Give Feedback</h2>

@@ -559,32 +559,101 @@ tr:hover {
 /* Feedback Form Styles */
 .feedback-container {
   background: white;
-  padding: 2.5rem;
+  padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
-  margin: 0 auto 3rem;
+  margin-bottom: 2rem;
 }
 
 .feedback-container h2 {
-  margin-bottom: 2rem;
   color: #4361ee;
+  margin-bottom: 2rem;
   font-size: 1.8rem;
   font-weight: 600;
   text-align: center;
 }
 
+.purchases-to-review h3 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.feedback-card {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1.5rem;
+  border: 1px solid #dee2e6;
+  transition: box-shadow 0.3s ease;
+}
+
+.feedback-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.car-info {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.car-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.car-header h4 {
+  color: #4361ee;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.purchase-date {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.car-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.car-details p {
+  color: #2c3e50;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.car-details i {
+  color: #4361ee;
+  width: 20px;
+}
+
 .feedback-form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .rating-input {
   display: flex;
-  gap: 0.8rem;
-  margin-top: 1rem;
-  justify-content: center;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
 }
 
 .rating-input input[type="radio"] {
@@ -593,31 +662,96 @@ tr:hover {
 
 .rating-input label {
   font-size: 2rem;
-  color: #ddd;
+  color: #dee2e6;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
 }
 
+.rating-input label:hover,
+.rating-input label:hover ~ label,
 .rating-input input[type="radio"]:checked ~ label {
   color: #f9c74f;
 }
 
-.rating-input label:hover,
-.rating-input label:hover ~ label {
-  color: #f9c74f;
-}
-
-textarea.form-control {
+.feedback-form textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
   resize: vertical;
-  min-height: 120px;
+  min-height: 100px;
+  margin-bottom: 0.5rem;
 }
 
-.no-purchases,
-.no-reviews {
+.no-purchases {
   text-align: center;
   padding: 3rem;
-  color: #6c757d;
   background: #f8f9fa;
   border-radius: 10px;
-  margin: 2rem 0;
+  color: #6c757d;
+}
+
+.no-purchases i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #4361ee;
+}
+
+.no-purchases p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Purchase Form Styles */
+.purchase-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.car-card {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid #dee2e6;
+}
+
+.car-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.car-details h3 {
+  color: #4361ee;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.car-price {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.car-color,
+.car-status {
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.purchase-form {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
 }
