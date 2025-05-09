@@ -134,6 +134,8 @@ public class CustomerServlet extends HttpServlet {
                 session.setAttribute("user", customer);
             }
             
+            // Reload all data after updating profile
+            reloadAllData(request, customer.getCustomerId());
             request.setAttribute("message", "Profile updated successfully");
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error updating profile", e);
@@ -219,18 +221,16 @@ public class CustomerServlet extends HttpServlet {
             sale.setReviewed(true);
             saleFacade.edit(sale);
             
-            // Redirect to dashboard with success message
+            // Reload all data after submitting feedback
+            reloadAllData(request, customer.getCustomerId());
             request.setAttribute("successMessage", "Thank you for your review!");
-            request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
-            
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Invalid input format. Please try again.");
-            request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error submitting feedback", e);
             request.setAttribute("errorMessage", "An error occurred while submitting your review");
-            request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
         }
+        request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
     }
 
     private void deleteFeedback(HttpServletRequest request, HttpServletResponse response) 
@@ -254,6 +254,9 @@ public class CustomerServlet extends HttpServlet {
                 // Delete the feedback
                 feedbackFacade.remove(feedback);
                 
+                // Reload all data after deleting feedback
+                Customer customer = (Customer) request.getSession().getAttribute("user");
+                reloadAllData(request, customer.getCustomerId());
                 request.setAttribute("successMessage", "Review deleted successfully");
             } else {
                 request.setAttribute("errorMessage", "Review not found");
@@ -315,6 +318,23 @@ public class CustomerServlet extends HttpServlet {
             request.setAttribute("errorMessage", "An error occurred while viewing purchases: " + e.getMessage());
         }
         request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+    }
+
+    private void reloadAllData(HttpServletRequest request, Long customerId) {
+        // Reload all sales and feedback for current customer
+        List<Sale> saleList = saleFacade.findByCustomerId(customerId);
+        List<Feedback> feedbackList = feedbackFacade.findByCustomerId(customerId);
+        
+        // Calculate average rating
+        double averageRating = feedbackList.stream()
+            .mapToDouble(Feedback::getRating)
+            .average()
+            .orElse(0.0);
+        
+        // Set the lists and average rating as request attributes
+        request.setAttribute("saleList", saleList);
+        request.setAttribute("feedbackList", feedbackList);
+        request.setAttribute("averageRating", averageRating);
     }
 
     @Override

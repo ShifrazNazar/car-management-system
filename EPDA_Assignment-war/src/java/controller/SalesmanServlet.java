@@ -130,6 +130,8 @@ public class SalesmanServlet extends HttpServlet {
                 session.setAttribute("user", salesman);
             }
             
+            // Reload all data after updating profile
+            reloadAllData(request, salesman.getSalesmanId());
             request.setAttribute("message", "Profile updated successfully");
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error updating profile", e);
@@ -148,6 +150,10 @@ public class SalesmanServlet extends HttpServlet {
             if (car != null) {
                 car.setStatus(status);
                 carFacade.edit(car);
+                
+                // Reload all data after updating car status
+                Salesman currentSalesman = (Salesman) request.getSession().getAttribute("user");
+                reloadAllData(request, currentSalesman.getSalesmanId());
                 request.setAttribute("message", "Car status updated successfully");
             } else {
                 request.setAttribute("error", "Car not found");
@@ -178,6 +184,9 @@ public class SalesmanServlet extends HttpServlet {
                 car.setStatus("paid");
                 carFacade.edit(car);
                 
+                // Reload all data after processing payment
+                Salesman currentSalesman = (Salesman) request.getSession().getAttribute("user");
+                reloadAllData(request, currentSalesman.getSalesmanId());
                 request.setAttribute("message", "Payment processed successfully");
             } else {
                 request.setAttribute("error", "Sale not found");
@@ -218,6 +227,19 @@ public class SalesmanServlet extends HttpServlet {
             request.setAttribute("error", "An error occurred while viewing sales: " + e.getMessage());
         }
         request.getRequestDispatcher("/salesman/dashboard.jsp").forward(request, response);
+    }
+
+    private void reloadAllData(HttpServletRequest request, Long salesmanId) {
+        // Reload all cars and sales
+        List<Car> carList = carFacade.findAll();
+        List<Sale> saleList = saleFacade.findAll();
+        
+        // Filter sales for current salesman
+        saleList.removeIf(sale -> !sale.getSalesman().getSalesmanId().equals(salesmanId));
+        
+        // Set the lists as request attributes
+        request.setAttribute("carList", carList);
+        request.setAttribute("saleList", saleList);
     }
 
     @Override

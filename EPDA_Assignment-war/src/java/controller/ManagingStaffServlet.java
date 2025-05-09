@@ -203,11 +203,13 @@ public class ManagingStaffServlet extends HttpServlet {
             }
             staff.setEmail(email);
             managingStaffFacade.edit(staff);
+            
+            // Reload all data after updating staff
+            reloadAllData(request);
+            request.setAttribute("message", "Staff updated successfully");
+        } else {
+            request.setAttribute("error", "Staff not found");
         }
-        
-        // Reload all data after updating staff
-        reloadAllData(request);
-        request.setAttribute("message", "Staff updated successfully");
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -216,11 +218,13 @@ public class ManagingStaffServlet extends HttpServlet {
         ManagingStaff staff = managingStaffFacade.find(id);
         if (staff != null) {
             managingStaffFacade.remove(staff);
+            
+            // Reload all data after deleting staff
+            reloadAllData(request);
+            request.setAttribute("message", "Staff deleted successfully");
+        } else {
+            request.setAttribute("error", "Staff not found");
         }
-        
-        // Reload all data after deleting staff
-        reloadAllData(request);
-        request.setAttribute("message", "Staff deleted successfully");
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -277,9 +281,13 @@ public class ManagingStaffServlet extends HttpServlet {
             }
             salesman.setEmail(email);
             salesmanFacade.edit(salesman);
+            
+            // Reload all data after updating salesman
+            reloadAllData(request);
+            request.setAttribute("message", "Salesman updated successfully");
+        } else {
+            request.setAttribute("error", "Salesman not found");
         }
-        
-        request.setAttribute("message", "Salesman updated successfully");
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -288,9 +296,13 @@ public class ManagingStaffServlet extends HttpServlet {
         Salesman salesman = salesmanFacade.find(id);
         if (salesman != null) {
             salesmanFacade.remove(salesman);
+            
+            // Reload all data after deleting salesman
+            reloadAllData(request);
+            request.setAttribute("message", "Salesman deleted successfully");
+        } else {
+            request.setAttribute("error", "Salesman not found");
         }
-        
-        request.setAttribute("message", "Salesman deleted successfully");
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -321,9 +333,13 @@ public class ManagingStaffServlet extends HttpServlet {
             }
             customer.setEmail(email);
             customerFacade.edit(customer);
+            
+            // Reload all data after updating customer
+            reloadAllData(request);
+            request.setAttribute("message", "Customer updated successfully");
+        } else {
+            request.setAttribute("error", "Customer not found");
         }
-        
-        request.setAttribute("message", "Customer updated successfully");
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -332,9 +348,13 @@ public class ManagingStaffServlet extends HttpServlet {
         Customer customer = customerFacade.find(id);
         if (customer != null) {
             customerFacade.remove(customer);
+            
+            // Reload all data after deleting customer
+            reloadAllData(request);
+            request.setAttribute("message", "Customer deleted successfully");
+        } else {
+            request.setAttribute("error", "Customer not found");
         }
-        
-        request.setAttribute("message", "Customer deleted successfully");
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -364,6 +384,8 @@ public class ManagingStaffServlet extends HttpServlet {
         
         carFacade.create(car);
         
+        // Reload all data after adding car
+        reloadAllData(request);
         request.setAttribute("message", "Car added successfully");
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
@@ -382,9 +404,13 @@ public class ManagingStaffServlet extends HttpServlet {
             car.setPrice(price);
             car.setStatus(status);
             carFacade.edit(car);
+            
+            // Reload all data after updating car
+            reloadAllData(request);
+            request.setAttribute("message", "Car updated successfully");
+        } else {
+            request.setAttribute("error", "Car not found");
         }
-        
-        request.setAttribute("message", "Car updated successfully");
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
@@ -393,9 +419,13 @@ public class ManagingStaffServlet extends HttpServlet {
         Car car = carFacade.find(id);
         if (car != null) {
             carFacade.remove(car);
+            
+            // Reload all data after deleting car
+            reloadAllData(request);
+            request.setAttribute("message", "Car deleted successfully");
+        } else {
+            request.setAttribute("error", "Car not found");
         }
-        
-        request.setAttribute("message", "Car deleted successfully");
         request.getRequestDispatcher("manager/dashboard.jsp").forward(request, response);
     }
 
