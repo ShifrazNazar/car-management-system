@@ -89,7 +89,3 @@ EPDA_Assignment/
 - Use PrimeFaces for UI components
 - Implement proper security measures
 - Test thoroughly before deployment
-
-## License
-
-[Add your license information here]
