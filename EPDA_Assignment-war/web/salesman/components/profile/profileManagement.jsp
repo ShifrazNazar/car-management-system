@@ -50,24 +50,3 @@
     </div>
   </form>
 </div>
-
-<!-- Profile Statistics -->
-<div class="stats-container">
-  <div class="stat-card">
-    <h3>Total Sales</h3>
-    <p>${saleList.size()}</p>
-    <i class="fas fa-chart-line"></i>
-  </div>
-
-  <div class="stat-card">
-    <h3>Cars Managed</h3>
-    <p>${carList.size()}</p>
-    <i class="fas fa-car"></i>
-  </div>
-
-  <div class="stat-card">
-    <h3>Pending Payments</h3>
-    <p>${saleList.stream().filter(s -> s.status != 'paid').count()}</p>
-    <i class="fas fa-money-bill-wave"></i>
-  </div>
-</div>

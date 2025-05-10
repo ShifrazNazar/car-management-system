@@ -18,14 +18,14 @@
         </div>
 
         <div class="stat-card">
-      <h3>Total Revenue</h3>
-      <c:set var="totalRevenue" value="0" />
-      <c:forEach items="${saleList}" var="sale">
-        <c:set var="totalRevenue" value="${totalRevenue + sale.amountPaid}" />
-      </c:forEach>
-      <p>$${totalRevenue}</p>
-      <i class="fas fa-dollar-sign"></i>
-    </div>
+            <h3>Total Revenue</h3>
+            <c:set var="totalRevenue" value="0" />
+            <c:forEach items="${saleList}" var="sale">
+                <c:set var="totalRevenue" value="${totalRevenue + sale.amountPaid}" />
+            </c:forEach>
+            <p>$${totalRevenue}</p>
+            <i class="fas fa-dollar-sign"></i>
+        </div>
 
         <div class="stat-card">
             <h3>Completed Sales</h3>

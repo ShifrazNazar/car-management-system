@@ -32,7 +32,7 @@
             <div class="review-header">
               <h3>${feedback.car.model}</h3>
               <div class="review-rating">
-                <c:forEach begin="1" end="5" var="i">
+               <c:forEach begin="1" end="5" var="i">
                   <i
                     class="fas fa-star ${i <= feedback.rating ? 'active' : ''}"
                   ></i>
