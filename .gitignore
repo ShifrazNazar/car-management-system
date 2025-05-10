@@ -66,3 +66,5 @@ gradle-app.setting
 *.swp
 *~.nib
 local.properties
+/EPDA_Assignment-war/nbproject/private/
+/EPDA_Assignment-ejb/nbproject/private/
