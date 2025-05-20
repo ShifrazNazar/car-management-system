@@ -432,10 +432,18 @@ public class CustomerServlet extends HttpServlet {
             .average()
             .orElse(0.0);
         
-        // Set the lists and average rating as request attributes
+        // Reload available cars
+        List<Car> availableCars = carFacade.findByStatus("available");
+        
+        // Reload salesmen
+        List<Salesman> salesmen = salesmanFacade.findAll();
+        
+        // Set all the lists and average rating as request attributes
         request.setAttribute("saleList", saleList);
         request.setAttribute("feedbackList", feedbackList);
         request.setAttribute("averageRating", averageRating);
+        request.setAttribute("availableCars", availableCars);
+        request.setAttribute("salesmen", salesmen);
     }
 
     @Override
