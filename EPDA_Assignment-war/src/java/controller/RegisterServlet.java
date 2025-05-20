@@ -46,6 +46,15 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
+        // Check if username exists in any user type
+        if (customerFacade.findByUsername(username) != null || 
+            salesmanFacade.findByUsername(username) != null || 
+            managingStaffFacade.findByUsername(username) != null) {
+            request.setAttribute("errorMessage", "Username already exists in the system!");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
         // Hash the password before storing
         String hashedPassword = PasswordHasher.hashPassword(password);
 
