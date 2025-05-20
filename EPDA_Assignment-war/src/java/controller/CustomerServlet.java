@@ -86,6 +86,10 @@ public class CustomerServlet extends HttpServlet {
             List<Car> availableCars = carFacade.findByStatus("available");
             request.setAttribute("availableCars", availableCars);
             
+            // Load all salesmen for purchase form
+            List<Salesman> salesmen = salesmanFacade.findAll();
+            request.setAttribute("salesmen", salesmen);
+            
             if (action == null) {
                 // Default action: show dashboard
                 request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
@@ -186,14 +190,25 @@ public class CustomerServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             String carIdStr = request.getParameter("carId");
+            String salesmanIdStr = request.getParameter("salesmanId");
+            
             if (carIdStr == null || carIdStr.trim().isEmpty()) {
                 request.setAttribute("errorMessage", "Invalid car selection");
                 request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
                 return;
             }
             
+            if (salesmanIdStr == null || salesmanIdStr.trim().isEmpty()) {
+                request.setAttribute("errorMessage", "Please select a salesman");
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+                return;
+            }
+            
             Long carId = Long.parseLong(carIdStr);
+            Long salesmanId = Long.parseLong(salesmanIdStr);
+            
             Car car = carFacade.find(carId);
+            Salesman salesman = salesmanFacade.find(salesmanId);
             
             if (car == null || !"available".equals(car.getStatus())) {
                 request.setAttribute("errorMessage", "Selected car is not available");
@@ -201,10 +216,8 @@ public class CustomerServlet extends HttpServlet {
                 return;
             }
             
-            // Get the first available salesman
-            List<Salesman> salesmen = salesmanFacade.findAll();
-            if (salesmen.isEmpty()) {
-                request.setAttribute("errorMessage", "No salesmen available to process your purchase");
+            if (salesman == null) {
+                request.setAttribute("errorMessage", "Selected salesman is not available");
                 request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
                 return;
             }
@@ -213,7 +226,7 @@ public class CustomerServlet extends HttpServlet {
             Sale sale = new Sale();
             sale.setCar(car);
             sale.setCustomer(customer);
-            sale.setSalesman(salesmen.get(0)); // Assign first available salesman
+            sale.setSalesman(salesman); // Use the selected salesman
             sale.setStatus("booked");
             sale.setReviewed(false);
             sale.setSaleDate(new Date());

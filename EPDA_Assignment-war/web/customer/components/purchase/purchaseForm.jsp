@@ -1,6 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="model.Car"%>
 <%@page import="model.CarFacade"%>
+<%@page import="model.Salesman"%>
+<%@page import="model.SalesmanFacade"%>
 <%@page import="javax.ejb.EJB"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
@@ -24,8 +26,18 @@
                     <p class="car-status">Status: ${car.status}</p>
                 </div>
                 <form action="CustomerServlet" method="POST" class="purchase-form">
+                    
                     <input type="hidden" name="action" value="submitPurchase">
                     <input type="hidden" name="carId" value="${car.carId}">
+                    <div class="form-group">
+                        <label for="salesmanId_${car.carId}">Select Salesman:</label>
+                        <select name="salesmanId" id="salesmanId_${car.carId}" class="form-control" required>
+                            <option value="">Choose a salesman...</option>
+                            <c:forEach items="${salesmen}" var="salesman">
+                                <option value="${salesman.salesmanId}">${salesman.username}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary" ${car.status ne 'available' ? 'disabled' : ''}>
                         <i class="fas fa-shopping-cart"></i> Purchase
                     </button>
